@@ -1,4 +1,3 @@
-# Practicas4_Aplicaciones_Web_250910
 # Prácticas de la asignatura de Aplicaiones Web
 ## T.S.U. en Desarrollo de Software Multiplataforma
 ### Docente: M.T.I Marco A. Ramírez Hernández
