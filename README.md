@@ -12,4 +12,4 @@ periodo: Septiembre-Diciembre 2026
 |--- |--- |--- |--- |---|
 |1.| Metadologia de la evaluacion de la materia| tRanscribir en la libreta y comprender la metadología y fechas de evaluación de la asignatura| 5| 🟢 concluida |
 |2.| Mi primera Página web | Codificar la primer página web con HTML puro ,sin estilos ni funcionalidad | 10 |🟢 Concluida| 
-|3| Mi portafolio web| Codificar y estilizar una página web con los datos del perfil estudiantil y personal| ?? |🟡 En curso|
+|3| Mi portafolio web| Codificar y estilizar una página web con los datos del perfil estudiantil y personal| ? |🟡 En curso|
