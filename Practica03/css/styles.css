@@ -12,12 +12,8 @@ body{
     margin: 0px;
     font-family: Arial, Helvetica, sans-serif;
     background-color: #0f172a;
-    color: #ccc;
+    color: #e2e8f0;
     line-height: 1.6;
-    /*border-color: red;
-    border-style:solid;
-    border-width: 5px;
-    padding: 50px;*/
 }
 
 /* ============================= */
@@ -35,7 +31,7 @@ nav {
     align-items: center;
     background: rgba(15, 23, 42, 0.45);
     backdrop-filter: blur(15px);
-    border-bottom: 1px solidrgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     z-index: 1000;
     transition: 0.3s;
 }
@@ -102,7 +98,7 @@ nav a:hover {
 == Solo el primer parallax (portada) ==
  ================*/
  #inicio{
-    min-height: 45px;
+    min-height: 85vh;
     justify-content: flex-start;
     align-items: center;
     padding: 90px 5% 50px 7%;
@@ -153,7 +149,7 @@ nav a:hover {
     backdrop-filter: blur(14px);
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius:24px;
-    box-shadow:0 25px 50 px rgba(0, 0, 0, 0.25);
+    box-shadow:0 25px 50px rgba(0, 0, 0, 0.25);
 }
 
 /* ============================= */
@@ -161,17 +157,18 @@ nav a:hover {
 /* ============================= */
 
 .hero-card {
-    max-width: 900px; /* Ancho suficiente para imagen + texto lado a lado */
-    width: 90%;
-    padding: 40px;
+    width: min(46%, 690px);
+    min-width: 0;
+    padding: 22px 25px;
     
     /* Disposición Flexbox */
     display: flex !important;
     flex-direction: row !important;
     align-items: center; /* Alinea verticalmente al centro */
     justify-content: center;
-    gap: 35px; /* Separación entre la imagen y el bloque de texto */
+    gap: 22px; /* Separación entre la imagen y el bloque de texto */
     text-align: left; /* Alinea el texto a la izquierda */
+    background: rgba(10, 19, 36, 0.58);
 }
 
 .perfil {
@@ -201,7 +198,6 @@ nav a:hover {
 
 .hero-card h1 {
     font-size: 3rem;
-
     margin-bottom: 8px;
 }
 
@@ -211,11 +207,8 @@ nav a:hover {
 
 blockquote {
     margin: 25px auto;
-
     max-width: 500px;
-
     font-size: 1.3rem;
-
     font-style: italic;
 }
 
@@ -227,10 +220,8 @@ blockquote {
 .boton {
     display: inline-block;
     margin-top: 15px;
-    padding:
-    14px 30px;
-    background: 
-    rgba(255, 255, 255, 0.9);
+    padding: 14px 30px;
+    background: rgba(255, 255, 255, 0.9);
     color: #111827;
     border-radius: 30px;
     text-decoration: none;
@@ -239,13 +230,9 @@ blockquote {
 }
 
 .boton:hover {
-    transform:
-    translateY(-4px);
-
-    box-shadow:
-    0 12px 25px
-    rgba(0, 0, 0, 0.25);
-    background-color: #67e8f9;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    background: #2563eb;
     color: white;
 }
 
@@ -256,11 +243,12 @@ blockquote {
 .seccion {
     min-height: 40vh;
     padding: 80px 8%;
+    scroll-margin-top: 75px;
 }
 
 .seccion h2 {
     text-align: center;
-    font-size: 2.4rem;
+    font-size: clamp(1.55rem, 2.5vw, 2.4rem);
     margin-bottom: 45px;
 }
 
@@ -270,20 +258,24 @@ blockquote {
 
 .solido-1 {
     background: #ee8309;
+    color: #17253b;
 }
 
 .solido-2 {
     background: #e4c9a0;
-    color: white;
+    color: #f8fafc;
 }
+
 .solido-3 {
     background: #0236a7;
-    color: white;
+    color: #17253b;
 }
+
 .solido-4 {
     background: #111827;
-    color: white;
+    color: #f8fafc;
 }
+
 /* ======================== */
 /* CONTENEDORES */
 /* ======================== */
@@ -297,7 +289,7 @@ blockquote {
     background: rgba(255,255,255,0.88);
     color: #222;
     padding: 30px;
-    border-radius:20px;
+    border-radius: 20px;
     box-shadow: 0 12px 30px rgba(0,0,0,0.12);
     transition: 0.3s;
 }
@@ -311,16 +303,14 @@ blockquote {
 /* DATOS PERSONALES */
 /* ======================== */
 
-.datos 
-{
+.datos {
    margin-top: 30px;
    display: grid;
    grid-template-columns: repeat(4, 1fr);
    gap: 20px;
 }
 
-.datos article
-{
+.datos article {
     padding: 20px;
     text-align: center;
     background: white;
@@ -342,8 +332,7 @@ blockquote {
 }
 
 .cinco {
-    grid-template-columns:
-        repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr);
 }
 
 
@@ -358,12 +347,13 @@ blockquote {
     border-radius: 15px;
 }
 
-/* ======================== */
+/* ============================= */
 /* REDES SOCIALES */
-/* ======================== */
+/* ============================= */
 
 .redes {
     text-align: center;
+    color: #17253b;
 }
 
 .redes-sociales {
@@ -381,7 +371,7 @@ blockquote {
     min-width: 120px;
     padding: 18px;
     color: white;
-    background:linear-gradient( 145deg, #1e293b, #334155);
+    background: linear-gradient(145deg, #1e293b, #334155);
     border-radius: 18px;
     text-decoration: none;
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
@@ -390,5 +380,277 @@ blockquote {
 
 .redes-sociales a:hover {
     transform: translateY(-8px) scale(1.05);
-    background: linear-gradient(145deg,#25bdeb,#23ecf3 );
+    background: linear-gradient(145deg, #24c8e8, #1f18e8);
+}
+
+.redes-sociales svg {
+    width: 36px;
+    height: 36px;
+}
+
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
+footer {
+    text-align: center;
+    padding: 40px;
+    background: #020617;
+    color: white;
+}
+
+footer a {
+    color: #67e8f9;
+    text-decoration: none;
+}
+
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 900px) {
+    .grid,
+    .cinco,
+    .datos {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    nav ul {
+        display: none;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .grid,
+    .cinco,
+    .datos {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-card h1 {
+        font-size: 2rem;
+    }
+
+    .parallax {
+        background-attachment: scroll;
+    }
+}
+
+
+/* ============================= */
+/* CARRUSEL */
+/* ============================= */
+.favoritos-intro {
+    text-align: center;
+    max-width: 650px;
+    margin: -20px auto 30px;
+    color: #cbd5e1;
+}
+
+.carrusel {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 850px;
+    margin: auto;
+}
+
+.carrusel-ventana {
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+    border-radius: 22px;
+}
+
+.carrusel-pista {
+    display: flex;
+    width: 100%;
+    transition: transform .45s ease;
+}
+
+.favorito-card {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #475569;
+    background: #293b55;
+    color: #fff;
+    border-radius: 22px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    min-height: 310px;
+}
+
+.favorito-card img {
+    height: 220px;
+    width: 220px;
+    object-fit: cover;
+}
+
+.favorito-icono {
+    font-size: 6rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px;
+}
+
+.favorito-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px;
+}
+
+.favorito-info strong {
+    font-size: 1.25rem;
+}
+
+.favorito-info small {
+    font-size: .95rem;
+    color: #dbeafe;
+}
+
+.carrusel-flecha {
+    border: 1px solid #64748b;
+    border-radius: 50%;
+    background: #334155;
+    color: #fff;
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.carrusel-flecha:hover {
+    background: #2563eb;
+}
+
+.carrusel-indicadores {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.carrusel-indicadores button {
+    border: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #94a3b8;
+    cursor: pointer;
+}
+
+.carrusel-indicadores button.activo {
+    background: #38bdf8;
+    transform: scale(1.25);
+}
+
+
+/* ============================= */
+/* MODALES */
+/* ============================= */
+
+.modal-favoritos [hidden] {
+    display: none;
+}
+
+.modal-favoritos {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(2, 6, 23, .96);
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    padding: 12px;
+}
+
+.modal-planel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    border: 1px solid #475569;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #0f172a;
+}
+
+.modal-cabecera {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid #334155;
+}
+
+.modal-cabecera h2 {
+    margin: 0;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+/* Bloquear scroll cuando el modal está abierto */
+body.modal-abierto {
+    overflow: hidden;
+}
+
+/* Ocultar el modal cuando tiene el atributo hidden */
+.modal-favoritos[hidden] {
+    display: none !important;
+}
+
+/* Área donde se insertan los videos, audios e iframe */
+.modal-contenido {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #020617;
+    min-height: 0;
+}
+
+/* Estilos ajustados para los reproductores interactivos */
+.modal-contenido video,
+.modal-contenido iframe {
+    width: 100%;
+    height: 100%;
+    max-height: 75vh;
+    border: none;
+    border-radius: 8px;
+}
+
+.modal-contenido audio {
+    width: 80%;
+    max-width: 500px;
+}
+
+/* Botón de cierre (X) del modal */
+.modal-cerrar {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.modal-cerrar:hover {
+    color: #fff;
+    background: #334155;
 }
