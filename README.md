@@ -8,7 +8,7 @@ periodo: Septiembre-Diciembre 2026
 se mostra a continuacion las evidencias fotograficas de **settings > pages** dentro del repositorio confirmando la activación
 ![captura de pantalla de Github pages](./imagenes/pagina.png)
 
-![captura de pantalla de la pagina web](./imagenes/pagina.png)
+![captura de pantalla de la pagina web](./imagenes/inicio.png)
 
 ## 🛠️ Procedimiento Realizado
 
