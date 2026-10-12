@@ -374,7 +374,7 @@ blockquote {
     background: linear-gradient(145deg, #12244b, #334257);
     border-radius: 18px;
     text-decoration: none;
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 25px rgba(18, 36, 75, 1);
     transition: 0.3s;
 }
 .redes-sociales a:hover {
