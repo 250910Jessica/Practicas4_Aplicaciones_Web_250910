@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MecaGest: Formulario de Registro de Nuevos Usuarios - 250910</title>
+</head>
+<body>
+    <header>
+        <h1>MecaGest</h1>
+        <h2>Formulario de Registro de Nuevos Usuarios</h2>
+        <p>Complete los campos para solicitar una cuenta en el sistema</p>
+    </header>
+
+    <main>
+        <form action="" method="POST">
+            <fieldset>
+                <legend>Información Personal</legend>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Jessica Gutierrez" required>
+                <br>
+                <label for="apellidoP">Apellido Paterno:</label>
+                <input type="text" id="apellidoP" placeholder="Gutierrez" required>
+            <br>
+            <label for="apellidoM">Apellido Materno:</label>
+            <input type="text" id="apellidoM" placeholder="Lecona" required>
+            <br>
+            <label for="genero">Género:</label>
+            <select id="genero" required>
+                <option value="">Seleccione...</option>
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+                <option value="otro">Otro</option>
+            </select>
+            <br>
+            <label for="fecha">Fecha de Nacimiento:</label>
+            <input type="date" id="fecha" required>
+            </fieldset>
+
+            <fieldset>
+            <legend>Información de Contacto</legend>
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" placeholder="jessica.gutierrez@example.com" >
+            <br>
+            <laber for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" placeholder="555-123-4567">
+            <br>
+            <label for="horarioContacto">Horario de Contacto:</label>
+            <input type="time" id="horarioInicio" placeholder="09:00-18:00">
+             <input type="time" id="horarioFin" placeholder="09:00-18:00">
+             </fieldset>
+            
+            <fieldset>
+                <legend>Datos de Acceso</legend>
+                <label for="usuario">Nombre de Usuario:</label>
+                <input type="text" id="usuario" placeholder="jessica123" required> >
+                <br>
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" required>
+                <br>
+                <label for="confirmarContrasena">Confirmar Contraseña:</label>
+                <input type="password" id="confirmarContrasena" required>
+            </fieldset>    
+
+            <fieldset>
+                <legend>Datos de Ubicación</legend>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" placeholder="Calle Falsa 123">  
+                <br>
+                <label for="pais">País:</label>
+                <input type="text" id="pais" placeholder="México">
+                 <br>
+                <label for="estado">Estado:</label>
+                <input type="text" id="estado" placeholder="CDMX">
+                <br>
+                <label for="ciudad">Ciudad:</label>
+                <input type="text" id="ciudad" placeholder="Ciudad de México">              
+                <br>
+                <label for="codigoPostal">Código Postal:</label>
+                <input type="text" id="codigoPostal" placeholder="01234">
+                
+            </fieldset>
+        </form>    
+    </main>
+</body>
+</html>
