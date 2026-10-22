@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MecaGest: Formulario de Registro de Nuevos Usuarios - 250910</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <header>
@@ -57,19 +58,32 @@
             <br>
             <label for="horarioContacto">Horario de Contacto:</label>
             <input type="time" id="horarioInicio" placeholder="09:00-18:00">
-             <input type="time" id="horarioFin" placeholder="09:00-18:00">
-             </fieldset>
+            <input type="time" id="horarioFin" placeholder="09:00-18:00">
+            <br>
+            <h4>Redes Sociales</h4>
+            <input type="checkbox" id="socialNetwors">
+            <label for="urlFacebook">Facebook</label>
+            <input for="url" aria-placeholder="http://www.facebook.com/userName"> 
+            <br>
+            <input type="checkbox" id="socialNetwors">
+            <label for="url">Linkedn:</label>
+            <input for="url" aria-placeholder="http://www.linkdn.com/userName"> 
+            <br>
+            <input type="checkbox" id="socialNetwors">
+            <label for="url">Whatsapp: (cargar QR)</label>
+            <input type="file" id="whatsAppQR" accept="image/"> 
+            </fieldset>
             
             <fieldset>
                 <legend>Datos de Acceso</legend>
                 <label for="usuario">Nombre de Usuario:</label>
-                <input type="text" id="usuario" placeholder="jessica123" required> >
+                <input type="text" id="usuario" placeholder="jessica123" required> 
                 <br>
                 <label for="contrasena">Contraseña:</label>
-                <input type="password" id="contrasena" required>
+                <input type="password" id="contrasena" placeholder="**********" required>
                 <br>
                 <label for="confirmarContrasena">Confirmar Contraseña:</label>
-                <input type="password" id="confirmarContrasena" required>
+                <input type="password" id="confirmarContrasena" placeholder="**********" required>
             </fieldset>    
 
             <fieldset>
@@ -101,14 +115,17 @@
 
     <form> <!-- Elementos input que usaremos más adelante -->
     <fieldset>
-        <legend>Visualización de Citas por Mes:</legend>
-        <label for="mesCitas">Por favor elige el mes:</label>
+        <legend>Visualización de Citas por:</legend>
+        <label for="mesCitas">Por favor elige el filtro:</label>
+        <input type="radio" value="Month" name="appoimentFilter" id="appoimentByMounth" checked>Mes
+        <input type="radio" value="Month" name="appoimentFilter" id="appoimentByWeek" >Semana
         <input type="month">
+        <input type="Week" disabled>
         <button id="verCitas">Ver Citas</button>
 
         <br>
 
-        <h4>Las citas programadas para el mes elegido son:</h4>
+        <h4>Las citas programadas para el mes/semana elegido son:</h4>
         <br>
 
         <table style="border: 1px solid black">
@@ -169,6 +186,9 @@
         <br>
         <label for="backgroundColor">Color de Fondo</label>
         <input type="color" id="backgroundColor" value="#CCC">
+        <br>
+        <label for="soundsVolume">Volumen de reproducciòn de sonidos</label>
+        <input type="range" id="soundsVolume" min="0" max="100" value="80"> <button id="muteSounds">Silecias Sonidos</button>
     </fieldset>
 
     <fieldset>
@@ -195,6 +215,16 @@
         <legend>Solicitud de cita</legend>
         <label for="dateAppoiment"> Fecha de la cita: </label>
         <input type="datetime-local" id="dateAppoiment">
+        <br>
+        <label for="locations">Elige la sucursal:</label>
+        <input list="locationsList">
+        <datalist id="locationsList">
+            <option>Xicotepec, Centro</option>
+            <option>Xicotepec, El Tabacal</option>
+            <option>San Isidro, Tierra Negra</option>
+            <option>Necaxa, Canaditas</option>
+            <option>Huauchinango, Petrolera 1</option>
+        </datalist>
         <br>
         <label for="descriptionText">Descripcion de la cita:</label>
         <textarea id="descritionText"></textarea>
@@ -236,6 +266,10 @@
                 <option value="scanner_obd2">Escáner automotriz OBD-II</option>
             </optgroup>
         </select>
+
+         
+        <input type="radio" value="Month" name="appoimentFilter" name="appoimentByMonth" default>Month
+        <input type="radio" value="Month" name="appoimentFilter" id="appoimentByWeek">Week
 
         <label for="toolQuantity">Cantidad</label>
         <input type="number" id="toolQuantity" min="1" max="10">

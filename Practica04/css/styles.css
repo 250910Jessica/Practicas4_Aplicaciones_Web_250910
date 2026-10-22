@@ -1,0 +1,275 @@
+:root {
+    /* Paleta 1: Fondos y estructura principal */
+    --bg-body: #2A2F63;
+    --bg-footer: #1a1e42;
+    --bg-card-dark: #7FC4F2;
+    --bg-input: #ffffff;
+    --bg-button-base: #5FB0C9;
+    
+    /* Paleta 2: Acentos, elementos claros y destacados */
+    --accent-cyan: #030303;
+    --accent-celeste: #7FC4F2;
+    --accent-hover-vibrant: #BFE3FA;
+    --accent-blue-royal: #3E8FD6;
+    --accent-purple: #0c0c0c;
+    
+    /* Textos y Contrastes */
+    --text-light-main: #2b2c2c;
+    --text-light-secondary: #111111;
+    --text-dark-main: #111827;
+    --text-dark-secondary: #222222;
+    
+    /* Tonos claros para tablas y componentes limpios */
+    --bg-light-clean: #EAF6FF;
+    --bg-light-soft: #BFE3FA;
+    --bg-light-neutral: #E3F6F5;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-light-main);
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* ==========================================================================
+   Estructura de Contenedores (Header y Main)
+   ========================================================================== */
+header {
+    background-color: rgb(250, 251, 252);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 30px;
+    border: 1px solid var(--accent-celeste);
+}
+
+header h1 {
+    color: var(--accent-cyan);
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+}
+
+header h2 {
+    color: var(--text-light-secondary);
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+header p {
+    color: var(--text-light-main);
+    margin-top: 10px;
+    font-size: 0.95rem;
+}
+
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+h4 {
+    color: var(--accent-cyan);
+    margin: 20px 0 10px 0;
+    font-size: 1.1rem;
+}
+
+/* ==========================================================================
+   Formularios y Elementos de Control
+   ========================================================================== */
+fieldset {
+    background-color: var(--bg-card-dark);
+    border: 1px solid var(--accent-celeste);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+legend {
+    background-color: var(--accent-blue-royal);
+    color: var(--text-light-main);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+label {
+    display: inline-block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    color: var(--text-light-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+input[type="month"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--bg-button-base);
+    border-radius: 6px;
+    color: var(--text-light-main);
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-light-secondary);
+    opacity: 0.7;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(127, 196, 242, 0.3);
+}
+
+input[type="time"] {
+    display: inline-block;
+    width: auto;
+    margin: 5px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    margin-right: 8px;
+    cursor: pointer;
+    accent-color: var(--accent-blue-royal);
+}
+
+input[type="file"] {
+    background: transparent;
+    border: none;
+    color: var(--text-light-secondary);
+    padding: 5px 0;
+}
+
+input[type="image"] {
+    border: 2px solid var(--text-light-main);
+    border-radius: 50%;
+    padding: 4px;
+    background-color: var(--bg-button-base);
+    transition: transform 0.2s ease;
+}
+input[type="image"]:hover {
+    transform: scale(1.05);
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-blue-royal);
+    margin: 10px 0;
+}
+
+/* ==========================================================================
+   Tablas (Visualización de datos)
+   ========================================================================== */
+table {
+    width: 100%;
+    border-collapse: collapse !important;
+    margin: 20px 0;
+    background-color: var(--bg-light-clean);
+    color: var(--text-dark-main);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid var(--accent-celeste) !important;
+}
+
+th {
+    background-color: var(--accent-purple);
+    color: var(--text-light-main);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) {
+    background-color: var(--bg-light-neutral);
+}
+
+tr:hover {
+    background-color: var(--bg-light-soft);
+}
+
+/* ==========================================================================
+   Botones y Acciones
+   ========================================================================== */
+button,
+input[type="submit"],
+input[type="reset"] {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 8px 5px 8px 0;
+    display: inline-block;
+}
+
+button,
+input[type="reset"] {
+    background-color: var(--bg-button-base);
+    color: var(--text-light-main);
+}
+
+input[type="submit"] {
+    background: linear-gradient(135deg, var(--accent-blue-royal), var(--accent-purple));
+    color: var(--text-light-main);
+}
+
+button:hover,
+input[type="reset"]:hover {
+    background-color: var(--accent-hover-vibrant);
+    color: var(--text-dark-main);
+    box-shadow: 0 0 15px rgba(191, 227, 250, 0.4);
+}
+
+input[type="submit"]:not(:disabled):hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 15px rgba(62, 141, 214, 0.4);
+}
+
+input[type="submit"]:disabled {
+    background: #31557d !important;
+    color: var(--text-light-secondary) !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none !important;
+}
