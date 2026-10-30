@@ -16,6 +16,7 @@
     <main>
         <form action="" method="POST">
             <fieldset>
+                <label for="nombre">Titulo:</label>
                     <legend>Datos Personales</legend>
                 <select>
                     <option>Sr.</option>
@@ -44,8 +45,11 @@
                 <option value="otro">Otro</option>
             </select>
             <br>
-            <label for="fecha">Fecha de Nacimiento:</label>
-            <input type="date" id="fecha" required>
+            <label for="fechaNacimiento">Fecha de nacimiento:</label>
+            <input type="date" id="fechaNacimiento" required>
+            <p id="resultadoEdad">
+               Selecciona una fecha para calcular tu edad.
+            </p>
             </fieldset>
 
             <fieldset>
@@ -328,5 +332,6 @@
 
         </form>    
     </main>
+    <script src="/Practica04/js/script.js"></script>
 </body>
 </html>
