@@ -3,6 +3,10 @@
 // ==========================================
 console.log("Hola Mundo, desde JavaScript");
 
+// Variables globales para el control del Wizard
+let currentStep = 1;
+const totalSteps = 5;
+
 // ==========================================
 // PRÁCTICA 02: VALIDAR MAYORÍA DE EDAD
 // ==========================================
@@ -10,14 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const fechaNacimiento = document.getElementById("fechaNacimiento");
     const resultadoEdad = document.getElementById("resultadoEdad");
 
-    if (!fechaNacimiento || !resultadoEdad) {
-        console.error("No se encontraron los elementos de fecha.");
-        return;
-    }
-
     function calcularEdad() {
-        console.log("Se está ejecutando calcularEdad");
-        console.log("Fecha seleccionada:", fechaNacimiento.value);
+        if (!fechaNacimiento || !resultadoEdad) return;
+
         resultadoEdad.classList.remove(
             "edad-estado--mayor",
             "edad-estado--menor",
@@ -32,18 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const [anio, mes, dia] = fechaNacimiento.value.split("-").map(Number);
         const nacimiento = new Date(anio, mes - 1, dia);
         const hoy = new Date();
-
         hoy.setHours(0, 0, 0, 0);
 
         if (nacimiento > hoy) {
-            resultadoEdad.textContent =
-                "Error: la fecha de nacimiento no puede ser futura.";
+            resultadoEdad.textContent = "Error: la fecha de nacimiento no puede ser futura.";
             resultadoEdad.classList.add("edad-estado--error");
             return;
         }
 
         let edad = hoy.getFullYear() - nacimiento.getFullYear();
-
         const diferenciaMes = hoy.getMonth() - nacimiento.getMonth();
 
         if (
@@ -54,19 +50,161 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (edad >= 18) {
-            resultadoEdad.textContent =
-                "Eres mayor de edad. Tienes " + edad + " años.";
+            resultadoEdad.textContent = "Eres mayor de edad. Tienes " + edad + " años.";
             resultadoEdad.classList.add("edad-estado--mayor");
         } else {
-            resultadoEdad.textContent =
-                "Eres menor de edad. Tienes " + edad + " años.";
+            resultadoEdad.textContent = "Eres menor de edad. Tienes " + edad + " años.";
             resultadoEdad.classList.add("edad-estado--menor");
         }
     }
 
-    fechaNacimiento.addEventListener("change", calcularEdad);
-    fechaNacimiento.addEventListener("input", calcularEdad);
+    if (fechaNacimiento) {
+        fechaNacimiento.addEventListener("change", calcularEdad);
+        fechaNacimiento.addEventListener("input", calcularEdad);
+        calcularEdad();
+    }
 
-    // Calcula también cuando se carga la página.
-    calcularEdad();
+    // Subrayado dinámico de casillas
+    const inputs = document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="reset"]), select, textarea');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', () => checkInputState(input));
+        input.addEventListener('change', () => checkInputState(input));
+    });
+
+    function checkInputState(input) {
+        if (input.value.trim() !== '') {
+            input.classList.add('filled');
+        } else {
+            input.classList.remove('filled');
+        }
+        updateWizardProgress();
+    }
+
+    // Inicializar estado de la barra al cargar
+    updateWizardProgress();
+
+    const form = document.getElementById('multiStepForm');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateStep()) {
+                alert('¡Solicitud de registro enviada con éxito!');
+            }
+        });
+    }
 });
+
+// ==========================================
+// FUNCIONES GLOBALES DE NAVEGACIÓN
+// ==========================================
+window.nextStep = function() {
+    if (validateStep()) {
+        if (currentStep < totalSteps) {
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            currentStep++;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            updateSidebarActive();
+            updateWizardProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+};
+
+window.prevStep = function() {
+    if (currentStep > 1) {
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        currentStep--;
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        updateSidebarActive();
+        updateWizardProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
+window.goToStep = function(targetStep) {
+    if (targetStep >= 1 && targetStep <= totalSteps) {
+        const currentStepEl = document.getElementById(`step-${currentStep}`);
+        if (currentStepEl) {
+            currentStepEl.classList.remove('active');
+        }
+
+        currentStep = targetStep;
+
+        const nextStepEl = document.getElementById(`step-${currentStep}`);
+        if (nextStepEl) {
+            nextStepEl.classList.add('active');
+        }
+
+        updateSidebarActive();
+        updateWizardProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
+function updateSidebarActive() {
+    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+    navItems.forEach((item, index) => {
+        if (index + 1 === currentStep) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+function updateWizardProgress() {
+    const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    const progressBar = document.getElementById('wizardProgress');
+    if (progressBar) progressBar.style.width = progressPercent + '%';
+
+    for (let i = 1; i <= totalSteps; i++) {
+        const stepItem = document.getElementById(`step-ind-${i}`);
+        const statusLabel = document.getElementById(`status-${i}`);
+        if (!stepItem) continue;
+
+        const stepEl = document.getElementById(`step-${i}`);
+        let stepFilled = true;
+        if (stepEl) {
+            const stepInputs = stepEl.querySelectorAll('input[required], select[required]');
+            stepInputs.forEach(inp => {
+                if (inp.value.trim() === '') stepFilled = false;
+            });
+        }
+
+        stepItem.classList.remove('active', 'completed');
+
+        if (i < currentStep || (stepFilled && i === currentStep && i !== totalSteps)) {
+            stepItem.classList.add('completed');
+            if (statusLabel) statusLabel.textContent = "Completado";
+        } else if (i === currentStep) {
+            stepItem.classList.add('active');
+            if (statusLabel) statusLabel.textContent = "En proceso";
+        } else {
+            if (statusLabel) statusLabel.textContent = "Pendiente";
+        }
+    }
+}
+
+function validateStep() {
+    const currentStepEl = document.getElementById(`step-${currentStep}`);
+    if (!currentStepEl) return true;
+    
+    const stepInputs = currentStepEl.querySelectorAll('input[required], select[required]');
+    let isValid = true;
+    
+    stepInputs.forEach(input => {
+        if (input.value.trim() === '') {
+            isValid = false;
+            input.style.borderBottomColor = 'var(--rojo)';
+            setTimeout(() => {
+                input.style.borderBottomColor = '';
+            }, 1200);
+        }
+    });
+
+    if (!isValid) {
+        alert('Por favor complete los campos obligatorios antes de continuar.');
+    }
+    return isValid;
+}

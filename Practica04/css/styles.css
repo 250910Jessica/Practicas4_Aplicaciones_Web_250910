@@ -30,134 +30,252 @@ body {
 }
 
 /* =========================================
+   MENÚ LATERAL (SIDEBAR) - PALETA AZUL
+========================================= */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(180deg, var(--azul-oscuro) 0%, var(--azul-principal) 100%);
+    color: var(--blanco);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.sidebar-logo {
+    padding: 0 25px 25px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    margin-bottom: 20px;
+}
+
+.sidebar-logo h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--blanco);
+}
+
+.sidebar-logo p {
+    font-size: 0.8rem;
+    color: var(--azul-claro);
+    margin-top: 4px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nav-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 25px;
+    color: var(--azul-claro);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-left: 4px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.nav-text {
+    letter-spacing: 0.5px;
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+/* Efecto Hover y Opción Activa con la paleta azul */
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--blanco);
+}
+
+.nav-item.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--blanco);
+    border-left-color: var(--azul-boton); /* Línea indicadora en azul brillante */
+}
+
+.nav-item.active .nav-icon {
+    background-color: var(--azul-oscuro);
+}
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+.main-content-wrapper {
+    margin-left: 260px;
+    min-height: 100vh;
+}
+
+/* =========================================
    ENCABEZADO
 ========================================= */
-
-header,
-.encabezado {
+header {
     width: 100%;
-    background: linear-gradient(
-        120deg,
-        var(--azul-oscuro),
-        var(--azul-principal)
-    );
+    background: linear-gradient(120deg, var(--azul-oscuro), var(--azul-principal));
     color: var(--blanco);
-    padding: 35px 8%;
+    padding: 30px 40px;
     text-align: left;
-    border: none;
-    border-radius: 0;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 header h1 {
     color: var(--blanco);
-    font-size: 2rem;
-    margin-bottom: 8px;
+    font-size: 1.8rem;
+    margin-bottom: 6px;
 }
 
 header h2 {
     color: var(--azul-claro);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 400;
 }
 
 header p {
     color: var(--azul-claro);
-    margin-top: 10px;
+    font-size: 0.95rem;
+    margin-top: 5px;
 }
-
-.encabezado-contenido {
-    max-width: 1100px;
-    margin: auto;
-}
-
-.encabezado-texto {
-    max-width: 750px;
-}
-
-/* =========================================
-   ETIQUETAS DEL ENCABEZADO
-========================================= */
-
-.etiquetas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 18px;
-}
-
-.etiquetas span {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-}
-
-/* =========================================
-   CONTENIDO PRINCIPAL
-========================================= */
 
 main {
     width: 100%;
-    max-width: 1100px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 40px 40px 40px;
 }
 
-.titulo-seccion {
-    color: var(--azul-oscuro);
-    font-size: 1.8rem;
-    margin-bottom: 20px;
+/* =========================================
+   BARRA WIZARD DE 5 PASOS
+========================================= */
+.wizard-container {
+    background: #ffffff;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 25px 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
 }
 
-.numero {
-    color: var(--azul-boton);
-    font-weight: bold;
-    margin-right: 10px;
+.wizard-track {
+    position: absolute;
+    top: 42px;
+    left: 80px;
+    right: 80px;
+    height: 4px;
+    background-color: var(--borde);
+    z-index: 1;
 }
 
-.subtitulo {
+.wizard-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--azul-boton);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.wizard-steps-header {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+}
+
+.step-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 2px solid var(--borde);
     color: var(--texto-secundario);
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.step-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--texto);
+    margin-bottom: 2px;
+}
+
+.step-status {
+    font-size: 0.75rem;
+    color: #667085;
+}
+
+.step-item.active .step-circle {
+    border-color: var(--azul-boton);
+    color: var(--azul-principal);
+    background-color: var(--azul-claro);
+}
+
+.step-item.completed .step-circle {
+    background-color: var(--azul-boton);
+    border-color: var(--azul-boton);
+    color: white;
+}
+
+.step-item.completed .step-status {
+    color: var(--verde);
+    font-weight: 600;
 }
 
 /* =========================================
-   CUADRÍCULA DEL FORMULARIO
+   TARJETAS Y FORM-STEP
 ========================================= */
-
-.formulario-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
+.form-step {
+    display: none;
 }
 
-/* =========================================
-   TARJETAS DEL FORMULARIO
-========================================= */
+.form-step.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
 
-.tarjeta,
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 fieldset {
     background-color: var(--blanco);
     border: 1px solid var(--borde);
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 22px;
-    min-width: 0;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-}
-
-.tarjeta-titulo {
-    color: var(--azul-oscuro);
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 18px;
-}
-
-.tarjeta-contenido {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 legend {
@@ -166,15 +284,6 @@ legend {
     padding: 7px 14px;
     border-radius: 8px;
     font-weight: bold;
-}
-
-/* =========================================
-   CAMPOS Y ETIQUETAS
-========================================= */
-
-.campo {
-    display: flex;
-    flex-direction: column;
     margin-bottom: 12px;
 }
 
@@ -184,42 +293,40 @@ label {
     font-size: 0.92rem;
     font-weight: 600;
     margin-bottom: 6px;
+    margin-top: 10px;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="password"],
-input[type="url"],
-input[type="date"],
-input[type="time"],
-input[type="month"],
-input[type="number"],
+/* =========================================
+   ESTILO MINIMALISTA: SIN BORDES + SUBRAYADO
+========================================= */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="reset"]),
 select,
 textarea {
     width: 100%;
-    padding: 11px 13px;
-    background-color: #FAFCFE;
-    border: 1px solid #D5E1EC;
-    border-radius: 8px;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--borde);
+    border-radius: 0;
     color: var(--texto);
     font-family: inherit;
     font-size: 0.95rem;
-    margin-bottom: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: #98A2B3;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
     outline: none;
-    border-color: var(--azul-boton);
-    box-shadow: 0 0 0 3px rgba(62, 143, 214, 0.15);
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-bottom-color: var(--azul-boton);
+    box-shadow: none;
+}
+
+input.filled, select.filled, textarea.filled {
+    border-bottom-color: var(--verde);
+}
+
+input::placeholder, textarea::placeholder {
+    color: #98A2B3;
 }
 
 textarea {
@@ -227,67 +334,56 @@ textarea {
     min-height: 90px;
 }
 
-.campo-completo {
-    grid-column: 1 / -1;
-}
-
 /* =========================================
-   CHECKBOX Y RADIO
+   TABLAS Y VALIDACIÓN DE EDAD
 ========================================= */
-
-input[type="checkbox"],
-input[type="radio"] {
-    accent-color: var(--azul-boton);
-    margin-right: 7px;
-    cursor: pointer;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background-color: var(--blanco);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.red-social {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
+th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid var(--borde);
+    font-size: 0.9rem;
 }
 
-/* =========================================
-   VALIDACIÓN DE EDAD
-========================================= */
+th {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
 
 #resultadoEdad {
-    padding: 12px;
-    margin-top: 10px;
+    padding: 10px 12px;
+    margin-top: 8px;
     border: 1px solid var(--borde);
     border-radius: 8px;
     background-color: var(--fondo);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
 }
 
-.edad-estado--mayor {
-    color: var(--verde);
-    background-color: #E8F7ED !important;
-    border-color: #A7E2B8 !important;
-}
-
-.edad-estado--menor {
-    color: var(--amarillo);
-    background-color: #FFF8E6 !important;
-    border-color: #F3D58A !important;
-}
-
-.edad-estado--error {
-    color: var(--rojo);
-    background-color: #FFF0F0 !important;
-    border-color: #F5B5B5 !important;
-}
+.edad-estado--mayor { color: var(--verde); background-color: #E8F7ED !important; border-color: #A7E2B8 !important; }
+.edad-estado--menor { color: var(--amarillo); background-color: #FFF8E6 !important; border-color: #F3D58A !important; }
+.edad-estado--error { color: var(--rojo); background-color: #FFF0F0 !important; border-color: #f80505 !important; }
 
 /* =========================================
    BOTONES
 ========================================= */
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
 
-button,
-input[type="submit"],
-input[type="reset"] {
+button, input[type="submit"], input[type="reset"] {
     padding: 11px 20px;
     border: none;
     border-radius: 8px;
@@ -297,147 +393,19 @@ input[type="reset"] {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
-    margin: 8px 5px 8px 0;
 }
 
-button:hover,
-input[type="submit"]:hover,
-input[type="reset"]:hover {
+button:hover, input[type="submit"]:hover {
     background-color: var(--azul-oscuro);
     transform: translateY(-1px);
 }
 
-.boton-secundario {
+.btn-secundario {
     background-color: #EAF1F7;
     color: var(--azul-oscuro);
 }
 
-.boton-secundario:hover {
-    background-color: #DCE8F2;
+.btn-secundario:hover {
+    background-color: var(--borde);
     color: var(--azul-oscuro);
-}
-
-.acciones,
-.botones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-/* =========================================
-   TÉRMINOS Y CONTADOR
-========================================= */
-
-.terminos {
-    margin: 18px 0;
-    color: var(--texto-secundario);
-}
-
-.contador {
-    color: #667085;
-    font-size: 0.85rem;
-    text-align: right;
-    margin-top: 4px;
-}
-
-/* =========================================
-   TABLAS
-========================================= */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    background-color: var(--blanco);
-    color: var(--texto);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-th,
-td {
-    padding: 12px 15px;
-    text-align: left;
-    border: 1px solid var(--borde);
-}
-
-th {
-    background-color: var(--azul-oscuro);
-    color: var(--blanco);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-tr:nth-child(even) {
-    background-color: var(--azul-claro);
-}
-
-tr:hover {
-    background-color: #DCEEFF;
-}
-
-/* =========================================
-   ARCHIVOS E IMÁGENES
-========================================= */
-
-input[type="file"] {
-    width: 100%;
-    padding: 8px 0;
-}
-
-input[type="range"] {
-    width: 100%;
-    accent-color: var(--azul-boton);
-}
-
-input[type="image"] {
-    border-radius: 50%;
-    max-width: 100%;
-}
-
-/* =========================================
-   DISEÑO RESPONSIVO
-========================================= */
-
-@media (max-width: 768px) {
-    header.encabezado {
-        padding: 25px 20px;
-    }
-    header h1 {
-        font-size: 1.6rem;
-    }
-    main {
-        padding: 15px;
-    }
-    .formulario-grid {
-        grid-template-columns: 1fr;
-    }
-    .campo-completo {
-        grid-column: auto;
-    }
-    .tarjeta fieldset {
-        padding: 18px;
-    }
-    table {
-        display: block;
-        overflow-x: auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .titulo-seccion {
-        font-size: 1.4rem;
-    }
-    .acciones,
-    .botones {
-        flex-direction: column;
-    }
-
-    button,
-    input[type="submit"],
-    input[type="reset"] {
-        width: 100%;
-        margin-right: 0;
-    }
 }
