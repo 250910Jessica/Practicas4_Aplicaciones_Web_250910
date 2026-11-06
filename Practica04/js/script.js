@@ -101,6 +101,9 @@ document.addEventListener("DOMContentLoaded", function () {
 window.nextStep = function() {
     if (validateStep()) {
         if (currentStep < totalSteps) {
+            // Limpiar mensaje de error si la validación es exitosa
+            setFormMessage(currentStep, '');
+            
             document.getElementById(`step-${currentStep}`).classList.remove('active');
             currentStep++;
             document.getElementById(`step-${currentStep}`).classList.add('active');
@@ -113,6 +116,7 @@ window.nextStep = function() {
 
 window.prevStep = function() {
     if (currentStep > 1) {
+        setFormMessage(currentStep, ''); // Limpiar al retroceder
         document.getElementById(`step-${currentStep}`).classList.remove('active');
         currentStep--;
         document.getElementById(`step-${currentStep}`).classList.add('active');
@@ -124,6 +128,7 @@ window.prevStep = function() {
 
 window.goToStep = function(targetStep) {
     if (targetStep >= 1 && targetStep <= totalSteps) {
+        setFormMessage(currentStep, '');
         const currentStepEl = document.getElementById(`step-${currentStep}`);
         if (currentStepEl) {
             currentStepEl.classList.remove('active');
@@ -204,7 +209,34 @@ function validateStep() {
     });
 
     if (!isValid) {
-        alert('Por favor complete los campos obligatorios antes de continuar.');
+        // En lugar de alert, mostramos texto de advertencia en el formulario
+        setFormMessage(currentStep, 'Por favor complete los campos obligatorios antes de continuar.');
+    } else {
+        setFormMessage(currentStep, '');
     }
     return isValid;
+}
+
+// Función auxiliar para mostrar u ocultar texto de aviso dentro del paso actual
+function setFormMessage(stepIndex, message) {
+    let msgContainer = document.getElementById(`step-msg-${stepIndex}`);
+    
+    // Si no existe el contenedor de texto en el HTML, lo creamos dinámicamente arriba del paso
+    if (!msgContainer) {
+        const stepEl = document.getElementById(`step-${stepIndex}`);
+        if (stepEl) {
+            msgContainer = document.createElement('div');
+            msgContainer.id = `step-msg-${stepIndex}`;
+            msgContainer.style.color = 'var(--rojo)';
+            msgContainer.style.fontSize = '0.85rem';
+            msgContainer.style.marginTop = '8px';
+            msgContainer.style.marginBottom = '12px';
+            msgContainer.style.fontWeight = '500';
+            stepEl.prepend(msgContainer);
+        }
+    }
+    
+    if (msgContainer) {
+        msgContainer.textContent = message;
+    }
 }
