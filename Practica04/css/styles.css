@@ -114,6 +114,7 @@ body {
 .nav-item.active .nav-icon {
     background-color: var(--azul-oscuro);
 }
+
 /* =========================================
    CONTENEDOR PRINCIPAL
 ========================================= */
@@ -332,6 +333,21 @@ input::placeholder, textarea::placeholder {
 textarea {
     resize: vertical;
     min-height: 90px;
+}
+
+/* =========================================
+   ESTILOS DE VALIDACIÓN E INLINE ERRORS
+========================================= */
+input.input-error, select.input-error {
+    border-bottom-color: var(--rojo) !important;
+}
+
+.inline-error-msg {
+    color: var(--rojo);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
 }
 
 /* =========================================
