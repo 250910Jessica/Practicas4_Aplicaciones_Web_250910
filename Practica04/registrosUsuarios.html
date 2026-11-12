@@ -9,35 +9,35 @@
 <body>
 
     <!-- MENÚ LATERAL (SIDEBAR) -->
-<aside class="sidebar">
-    <div class="sidebar-logo">
-        <h2>MecaGest</h2>
-        <p>Panel de Control</p>
-    </div>
-    
-    <nav class="sidebar-nav">
-        <a href="javascript:void(0);" class="nav-item active" onclick="goToStep(1)">
-            <span class="nav-text">Datos Personales</span>
-            <span class="nav-icon">👤</span>
-        </a>
-        <a href="javascript:void(0);" class="nav-item" onclick="goToStep(2)">
-            <span class="nav-text">Contacto</span>
-            <span class="nav-icon">📞</span>
-        </a>
-        <a href="javascript:void(0);" class="nav-item" onclick="goToStep(3)">
-            <span class="nav-text">Datos de Acceso</span>
-            <span class="nav-icon">🔑</span>
-        </a>
-        <a href="javascript:void(0);" class="nav-item" onclick="goToStep(4)">
-            <span class="nav-text">Ubicación</span>
-            <span class="nav-icon">📍</span>
-        </a>
-        <a href="javascript:void(0);" class="nav-item" onclick="goToStep(5)">
-            <span class="nav-text">Confirmación</span>
-            <span class="nav-icon">✔️</span>
-        </a>
-    </nav>
-</aside>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2>MecaGest</h2>
+            <p>Panel de Control</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="javascript:void(0);" class="nav-item active" onclick="goToStep(1)">
+                <span class="nav-text">Datos Personales</span>
+                <span class="nav-icon">👤</span>
+            </a>
+            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(2)">
+                <span class="nav-text">Contacto</span>
+                <span class="nav-icon">📞</span>
+            </a>
+            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(3)">
+                <span class="nav-text">Datos de Acceso</span>
+                <span class="nav-icon">🔑</span>
+            </a>
+            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(4)">
+                <span class="nav-text">Ubicación</span>
+                <span class="nav-icon">📍</span>
+            </a>
+            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(5)">
+                <span class="nav-text">Confirmación</span>
+                <span class="nav-icon">✔️</span>
+            </a>
+        </nav>
+    </aside>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div class="main-content-wrapper">
@@ -188,25 +188,29 @@
                     <fieldset>
                         <legend>Datos de Ubicación</legend>
                         <label for="direccion">Dirección:</label>
-                        <input type="text" id="direccion" placeholder="Calle Falsa 123" required>  
+                        <input type="text" id="direccion" placeholder="Calle Principal 123" required>  
                         <br>
                         <label for="pais">País:</label>
-                        <input type="text" id="pais" value="México" readonly>
+                        <select id="pais" required>
+                            <option value="México">México</option>
+                        </select>
                         <br>
                         <label for="estado">Estado:</label>
                         <select id="estado" required>
                             <option value="">Selecciona un estado...</option>
                         </select>
                         <br>
-                        <label for="municipio">Municipio / Alcaldía:</label>
-                        <select id="municipio" required>
-                            <option value="">Selecciona un municipio...</option>
-                        </select>           
+                        <label for="ciudad">Ciudad / Localidad:</label>
+                        <input list="ciudadesList" id="ciudad" placeholder="Selecciona o escribe la ciudad..." required>
+                        <datalist id="ciudadesList">
+                            <!-- Se llena dinámicamente -->
+                        </datalist>
                         <br>
                         <label for="codigoPostal">Código Postal:</label>
-                        <select id="codigoPostal" required>
-                            <option value="">Selecciona un código postal...</option>
-                        </select>
+                        <input list="cpList" id="codigoPostal" placeholder="Selecciona o escribe el CP..." maxlength="5" required>
+                        <datalist id="cpList">
+                            <!-- Se llena dinámicamente -->
+                        </datalist>
                     </fieldset>
 
                     <div class="btn-container">
@@ -428,6 +432,9 @@
         </main>
     </div>
 
+    <!-- Carga de scripts -->
+    <script src="js/domicilios.js"></script>
+    <script src="js/domicilios.json"></script>
     <script src="js/script.js"></script>
 </body>
-</html>  
+</html>
