@@ -66,8 +66,8 @@ const VALIDADORES = {
     urlFacebook: v => urlValida(v, "facebook.com"),
     urlLinkedin: v => urlValida(v, "linkedin.com"),
     usuario: v => (v.length >= 4 && !/\s/.test(v)) || "Utiliza al menos 4 caracteres, sin espacios.",
-    contrasena: v => /^(?=.*[A-Z])(?=.*[^A-Za-z0-9\s])\S{6,}$/.test(v) ||
-        "Mínimo 6 caracteres, una mayúscula y un símbolo especial, sin espacios.",
+    contrasena: v => /^(?=.*[A-Z])(?=.*[^A-Za-z0-9\s])\S{15,}$/.test(v) ||
+        "Mínimo 15 caracteres, una mayúscula y un símbolo especial, sin espacios.",
     confirmarContrasena: v => v === document.getElementById("contrasena").value || "Las contraseñas no coinciden.",
     rfc: v => /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i.test(v) || "Escribe un RFC válido (ej. ABCD010203XYZ).",
     cpFiscal: v => /^\d{5}$/.test(v) || "El código postal fiscal debe tener 5 dígitos.",
@@ -368,20 +368,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 9. Próximas citas: el radio habilita solo su selector
     const radiosFiltro = document.querySelectorAll('input[name="appoimentFilter"]');
     if (radiosFiltro.length) {
-        const mes = document.getElementById("filtroMes");
-        const semana = document.getElementById("filtroSemana");
+        const grupoMes = document.getElementById("grupoMes");
+        const grupoSemana = document.getElementById("grupoSemana");
         const sync = () => {
             const porMes = document.getElementById("appoimentByMonth").checked;
-            mes.disabled = !porMes;
-            semana.disabled = porMes;
+            if (grupoMes && grupoSemana) {
+                grupoMes.classList.toggle("oculta", !porMes);
+                grupoSemana.classList.toggle("oculta", porMes);
+            }
         };
         radiosFiltro.forEach(r => r.addEventListener("change", sync));
         sync();
     }
-
     // 10. Salidas de almacén: el catálogo depende de la categoría
     const radiosCat = document.querySelectorAll('input[name="ressourceCategory"]');
     if (radiosCat.length) {
@@ -409,4 +409,92 @@ document.addEventListener("DOMContentLoaded", function () {
         radiosCat.forEach(r => r.addEventListener("change", llenar));
         llenar();
     }
-});
+    // 11. Configuración de colores en tiempo real
+    const primaryColorInput = document.getElementById("primaryColor");
+    const bgColorInput = document.getElementById("backgroundColor");
+
+    if (primaryColorInput && bgColorInput) {
+        primaryColorInput.addEventListener("input", (e) => {
+            const val = e.target.value;
+            document.documentElement.style.setProperty("--azul-principal", val);
+            document.documentElement.style.setProperty("--azul-oscuro", val);
+            document.documentElement.style.setProperty("--azul-boton", val);
+        });
+
+        bgColorInput.addEventListener("input", (e) => {
+            const val = e.target.value;
+            document.documentElement.style.setProperty("--fondo", val);
+        });
+    }
+
+    // 12. Control interactivo de volumen, porcentaje y botón de silencio (¡Pégalo aquí abajo!)
+    const rangeVolume = document.getElementById("soundsVolume");
+    const spanVolumenTexto = document.getElementById("volumenTexto");
+    const btnMute = document.getElementById("muteSounds");
+    const iconoBotonAudio = document.getElementById("iconoBotonAudio");
+    const textoBotonAudio = document.getElementById("textoBotonAudio");
+
+    let volumenAnterior = 80;
+
+    if (rangeVolume && spanVolumenTexto && btnMute) {
+        rangeVolume.addEventListener("input", (e) => {
+            const val = e.target.value;
+            spanVolumenTexto.textContent = val;
+            if (val > 0) {
+                volumenAnterior = val;
+                btnMute.style.backgroundColor = ""; 
+                btnMute.style.color = "";
+                iconoBotonAudio.className = "fas fa-volume-high";
+                textoBotonAudio.textContent = "Silenciar sonidos";
+            } else {
+                btnMute.style.backgroundColor = "var(--azul-oscuro)";
+                btnMute.style.color = "#ffffff";
+                iconoBotonAudio.className = "fas fa-volume-xmark";
+                textoBotonAudio.textContent = "Activar sonidos";
+            }
+        });
+
+        btnMute.addEventListener("click", () => {
+            if (rangeVolume.value > 0) {
+                volumenAnterior = rangeVolume.value;
+                rangeVolume.value = 0;
+                spanVolumenTexto.textContent = "0";
+                btnMute.style.backgroundColor = "var(--azul-oscuro)";
+                btnMute.style.color = "#ffffff";
+                iconoBotonAudio.className = "fas fa-volume-xmark";
+                textoBotonAudio.textContent = "Activar sonidos";
+            } else {
+                rangeVolume.value = volumenAnterior > 0 ? volumenAnterior : 50;
+                spanVolumenTexto.textContent = rangeVolume.value;
+                btnMute.style.backgroundColor = "";
+                btnMute.style.color = "";
+                iconoBotonAudio.className = "fas fa-volume-high";
+                textoBotonAudio.textContent = "Silenciar sonidos";
+            }
+        });
+    }
+// 13. Vista previa de la foto de perfil en círculo
+    const userPhotoInput = document.getElementById("userPhoto");
+    const avatarPreview = document.getElementById("avatarPreview");
+    const avatarPlaceholder = document.getElementById("avatarPlaceholder");
+
+    if (userPhotoInput && avatarPreview && avatarPlaceholder) {
+        userPhotoInput.addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    avatarPreview.src = evt.target.result;
+                    avatarPreview.style.display = "block";
+                    avatarPlaceholder.style.display = "none";
+                };
+                reader.readAsDataURL(file);
+            } else {
+                avatarPreview.src = "";
+                avatarPreview.style.display = "none";
+                avatarPlaceholder.style.display = "block";
+            }
+        });
+    }
+}); 
+

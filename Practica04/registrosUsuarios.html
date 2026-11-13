@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MecaGest: Formulario de Registro de Nuevos Usuarios - M250980</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>MecaGest: Formulario de Registro de Nuevos Usuarios - 250910</title>
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="data/domicilios.js"></script>
     <script src="js/script.js" defer></script>
@@ -17,10 +17,10 @@
     </header>
 
     <nav class="menu-nav" aria-label="Módulos">
-        <a href="registroUsuarios.html" class="activo"><i class="fas fa-user-plus"></i> Registro de usuarios</a>
-        <a href="proximas_citas.html"><i class="fas fa-calendar-check"></i> Próximas citas</a>
-        <a href="configuracion.html"><i class="fas fa-gear"></i> Configuración</a>
-        <a href="salidas_almacen.html"><i class="fas fa-screwdriver-wrench"></i> Salidas de almacén</a>
+        <a href="registrosUsuarios.html">Registro de usuarios</a>
+        <a href="proximas_citas.html">Próximas citas</a>
+        <a href="configuracion.html">Configuración</a>
+        <a href="salidas_almacen.html">Salidas de almacén</a>
     </nav>
 
     <main>
@@ -58,16 +58,16 @@
                         </select>
                     </div>
                     <div class="input-group">
-                        <label for="nombre">Nombre: </label>
-                        <input type="text" id="nombre" placeholder="Brian Isael" required>
+                        <label for="nombre">Nombre: *</label>
+                        <input type="text" id="nombre" placeholder="Jessica" required>
                     </div>
                     <div class="input-group">
-                        <label for="AppPaterno">Apellido Paterno: </label>
-                        <input type="text" id="AppPaterno" placeholder="Ramirez" required>
+                        <label for="apellidoP">Apellido Paterno: *</label>
+                        <input type="text" id="apellidoP" placeholder="Gutierrez" required>
                     </div>
                     <div class="input-group">
-                        <label for="AppMaterno">Apellido Materno: </label>
-                        <input type="text" id="AppMaterno" placeholder="Cortes">
+                        <label for="apellidoM">Apellido Materno: </label>
+                        <input type="text" id="apellidoM" placeholder="Lecona">
                     </div>
                     <div class="input-group">
                         <label for="genero">Género: </label>
@@ -96,13 +96,12 @@
                 <div class="grid-2-col">
                     <div class="input-group">
                         <label for="correo">Correo Electrónico: *</label>
-                        <input type="email" id="correo" placeholder="marco@ejemplo.com" required>
+                        <input type="email" id="correo" placeholder="jessica.gutierrez@example.com" required>
                     </div>
                     <div class="input-group">
-                        <label for="telefono">Número Telefónico: </label>
-                        <input type="tel" id="telefono" placeholder="(55) 1234-5678">
+                    <label for="telefono">Número Telefónico: *</label>
+                    <input type="tel" id="telefono" placeholder="(55) 1234-5678" required>
                     </div>
-                </div>
 
                 <h4>Horario preferido de contacto</h4>
                 <div class="grid-2-col">
@@ -173,7 +172,7 @@
                 <div class="grid-2-col">
                     <div class="input-group span-2">
                         <label for="usuario">Nombre de usuario: *</label>
-                        <input type="text" id="usuario" placeholder="brianisael" autocomplete="username" required>
+                        <input type="text" id="usuario" placeholder="jessica123" autocomplete="username" required>
                         <small class="ayuda">Utiliza al menos 4 caracteres.</small>
                     </div>
                     <div class="input-group">
@@ -191,10 +190,13 @@
                         </div>
                     </div>
                 </div>
-                <small class="ayuda">Requisitos: mínimo 6 caracteres, al menos una mayúscula y un símbolo especial. Ambas contraseñas deben coincidir. Validación realizada con expresiones regulares en JavaScript.</small>
+                <small class="ayuda">Requisitos: mínimo 15 caracteres, al menos una mayúscula y un símbolo especial. Ambas contraseñas deben coincidir.</small>
                 <div class="btn-group between">
                     <button type="button" class="btn-secondary" onclick="moverPaso(-1)">&laquo; Anterior</button>
-                    <div style="display:flex; gap:10px;"><input type="reset" class="btn-secondary" value="Limpiar"><button type="button" class="btn-primary" onclick="moverPaso(1)">Siguiente paso &raquo;</button></div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="reset" class="btn-secondary" value="Limpiar">
+                        <button type="button" class="btn-primary" onclick="moverPaso(1)">Siguiente paso &raquo;</button>
+                    </div>
                 </div>
             </fieldset>
 
@@ -226,7 +228,7 @@
                         <input type="text" id="codigoPostal" inputmode="numeric" maxlength="10" placeholder="73080">
                     </div>
                 </div>
-                <p id="notaCp" class="nota-cp oculta"><i class="fas fa-info-circle"></i> Código postal sugerido para una colonia de ejemplo. Confirma tu CP real antes de continuar.</p>
+                <p id="notaCp" class="nota-cp oculta"><i class="fas fa-info-circle"></i> Código postal sugerido para una colonia de ejemplo.</p>
                 <div class="btn-group between">
                     <button type="button" class="btn-secondary" onclick="moverPaso(-1)">&laquo; Anterior</button>
                     <div style="display:flex; gap:10px;"><input type="reset" class="btn-secondary" value="Limpiar"><button type="button" class="btn-primary" onclick="moverPaso(1)">Siguiente paso &raquo;</button></div>
@@ -278,11 +280,9 @@
                     <div class="input-group">
                         <label for="fiscalSituacion">Constancia de situación fiscal (PDF)</label>
                         <input type="file" id="fiscalSituacion" accept=".pdf" data-fiscal>
-                        <small class="ayuda">Archivo opcional. La carga real y su revisión se implementarán en PHP.</small>
                     </div>
                 </div>
-                <input type="hidden" id="userIdFiscal" value="25XXXX">
-                <p class="nota-pie">Datos de ejemplo para fines académicos. Antes de una facturación real, deberán comprobarse los catálogos del SAT, el régimen y los requisitos de CFDI vigentes.</p>
+                <input type="hidden" id="userIdFiscal" value="250910">
 
                 <div class="checkbox-linea">
                     <input type="checkbox" id="terminos" value="validado" required>
@@ -295,6 +295,5 @@
             </fieldset>
         </form>
     </main>
-
 </body>
 </html>
