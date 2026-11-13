@@ -3,438 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MecaGest: Formulario de Registro de Nuevos Usuarios - 250910</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>MecaGest: Formulario de Registro de Nuevos Usuarios - M250980</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="data/domicilios.js"></script>
+    <script src="js/script.js" defer></script>
 </head>
 <body>
+    <header>
+        <h1>MecaGest</h1>
+        <h2>Registro de Nuevos Usuarios</h2>
+        <p>Complete los campos para solicitar una cuenta en el sistema.</p>
+    </header>
 
-    <!-- MENÚ LATERAL (SIDEBAR) -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <h2>MecaGest</h2>
-            <p>Panel de Control</p>
+    <nav class="menu-nav" aria-label="Módulos">
+        <a href="registroUsuarios.html" class="activo"><i class="fas fa-user-plus"></i> Registro de usuarios</a>
+        <a href="proximas_citas.html"><i class="fas fa-calendar-check"></i> Próximas citas</a>
+        <a href="configuracion.html"><i class="fas fa-gear"></i> Configuración</a>
+        <a href="salidas_almacen.html"><i class="fas fa-screwdriver-wrench"></i> Salidas de almacén</a>
+    </nav>
+
+    <main>
+        <div id="alerta-global" class="alerta oculta">
+            <i class="fas fa-exclamation-circle"></i> Revisa los campos señalados antes de continuar.
         </div>
-        
-        <nav class="sidebar-nav">
-            <a href="javascript:void(0);" class="nav-item active" onclick="goToStep(1)">
-                <span class="nav-text">Datos Personales</span>
-                <span class="nav-icon">👤</span>
-            </a>
-            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(2)">
-                <span class="nav-text">Contacto</span>
-                <span class="nav-icon">📞</span>
-            </a>
-            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(3)">
-                <span class="nav-text">Datos de Acceso</span>
-                <span class="nav-icon">🔑</span>
-            </a>
-            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(4)">
-                <span class="nav-text">Ubicación</span>
-                <span class="nav-icon">📍</span>
-            </a>
-            <a href="javascript:void(0);" class="nav-item" onclick="goToStep(5)">
-                <span class="nav-text">Confirmación</span>
-                <span class="nav-icon">✔️</span>
-            </a>
-        </nav>
-    </aside>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <div class="main-content-wrapper">
-        <header>
-            <h1>MecaGest</h1>
-            <h2>Formulario de Registro de Nuevos Usuarios</h2>
-            <p>Complete los campos para solicitar una cuenta en el sistema</p>
-        </header>
+        <div class="wizard-bar">
+            <div class="wizard-paso-item activo" id="ind-0"><i class="fas fa-user"></i></div>
+            <div class="line"></div>
+            <div class="wizard-paso-item" id="ind-1"><i class="fas fa-address-book"></i></div>
+            <div class="line"></div>
+            <div class="wizard-paso-item" id="ind-2"><i class="fas fa-lock"></i></div>
+            <div class="line"></div>
+            <div class="wizard-paso-item" id="ind-3"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="line"></div>
+            <div class="wizard-paso-item" id="ind-4"><i class="fas fa-file-invoice"></i></div>
+        </div>
 
-        <main>
-            <!-- BARRA DE PROCESO WIZARD DE 5 PASOS -->
-            <div class="wizard-container">
-                <div class="wizard-track">
-                    <div class="wizard-progress-bar" id="wizardProgress"></div>
-                </div>
-                <div class="wizard-steps-header">
-                    <div class="step-item active" id="step-ind-1">
-                        <div class="step-circle">1</div>
-                        <span class="step-title">Datos Personales</span>
-                        <span class="step-status" id="status-1">En proceso</span>
-                    </div>
-                    <div class="step-item" id="step-ind-2">
-                        <div class="step-circle">2</div>
-                        <span class="step-title">Contacto</span>
-                        <span class="step-status" id="status-2">Pendiente</span>
-                    </div>
-                    <div class="step-item" id="step-ind-3">
-                        <div class="step-circle">3</div>
-                        <span class="step-title">Datos de Acceso</span>
-                        <span class="step-status" id="status-3">Pendiente</span>
-                    </div>
-                    <div class="step-item" id="step-ind-4">
-                        <div class="step-circle">4</div>
-                        <span class="step-title">Ubicación</span>
-                        <span class="step-status" id="status-4">Pendiente</span>
-                    </div>
-                    <div class="step-item" id="step-ind-5">
-                        <div class="step-circle">5</div>
-                        <span class="step-title">Confirmación</span>
-                        <span class="step-status" id="status-5">Pendiente</span>
-                    </div>
-                </div>
-            </div>
+        <div id="mensajeSimulacion" class="mensaje-simulacion oculta" style="display: none;">
+            ¡Registro revisado! Envío simulado: los datos no se almacenan.
+        </div>
 
-            <form id="multiStepForm" action="" method="POST">
-                
-                <!-- PASO 1: Datos Personales -->
-                <div class="form-step active" id="step-1">
-                    <fieldset>
-                        <legend>Datos Personales</legend>
-                        <label for="titulo">Título:</label>
-                        <select id="titulo">
-                            <option>Sr.</option>
-                            <option>Sra.</option>
-                            <option>Srita.</option>
-                            <option>Ing.</option>
-                            <option>Dr.</option>
-                            <option>Mtro.</option>
-                            <option>Ninguno</option>
+        <form id="registroForm" action="" method="post" novalidate>
+            <!-- PASO 1 -->
+            <fieldset class="wizard-paso paso-activo" id="paso-0">
+                <legend>Datos Personales</legend>
+                <div class="grid-2-col">
+                    <div class="input-group">
+                        <label for="tituloCortesia">Título de Cortesía: </label>
+                        <select id="tituloCortesia">
+                            <option value="">Selecciona una opción</option>
+                            <option>Sr.</option><option>Sra.</option><option>Srita.</option>
+                            <option>Ing.</option><option>Dr.</option><option>Mtro.</option><option>Ninguno</option>
                         </select>
-                        <br>
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" id="nombre" placeholder="Jessica Gutierrez" required>
-                        <br>
-                        <label for="apellidoP">Apellido Paterno:</label>
-                        <input type="text" id="apellidoP" placeholder="Gutierrez" required>
-                        <br>
-                        <label for="apellidoM">Apellido Materno:</label>
-                        <input type="text" id="apellidoM" placeholder="Lecona" required>
-                        <br>
-                        <label for="genero">Género:</label>
-                        <select id="genero" required>
-                            <option value="">Seleccione...</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="femenino">Femenino</option>
-                            <option value="otro">Otro</option>
+                    </div>
+                    <div class="input-group">
+                        <label for="nombre">Nombre: </label>
+                        <input type="text" id="nombre" placeholder="Brian Isael" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="AppPaterno">Apellido Paterno: </label>
+                        <input type="text" id="AppPaterno" placeholder="Ramirez" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="AppMaterno">Apellido Materno: </label>
+                        <input type="text" id="AppMaterno" placeholder="Cortes">
+                    </div>
+                    <div class="input-group">
+                        <label for="genero">Género: </label>
+                        <select id="genero">
+                            <option value="">Selecciona una opción</option>
+                            <option value="F">Femenino</option>
+                            <option value="M">Masculino</option>
+                            <option value="X">Prefiero no decirlo</option>
                         </select>
-                        <br>
-                        <label for="fechaNacimiento">Fecha de nacimiento:</label>
-                        <input type="date" id="fechaNacimiento" required>
-                        <p id="resultadoEdad">
-                             Selecciona una fecha para calcular tu edad.
-                        </p>
-                    </fieldset>
+                    </div>
+                    <div class="input-group">
+                        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                        <input type="date" id="fechaNacimiento">
+                    </div>
+                </div>
+                <p id="resultadoEdad">Selecciona una fecha para calcular tu edad.</p>
+                <div class="btn-group right">
+                    <input type="reset" class="btn-secondary" value="Limpiar">
+                    <button type="button" class="btn-primary" onclick="moverPaso(1)">Siguiente paso &raquo;</button>
+                </div>
+            </fieldset>
 
-                    <div class="btn-container">
-                        <div></div>
-                        <button type="button" onclick="nextStep()">Siguiente</button>
+            <!-- PASO 2 -->
+            <fieldset class="wizard-paso" id="paso-1">
+                <legend>Datos de Contacto</legend>
+                <div class="grid-2-col">
+                    <div class="input-group">
+                        <label for="correo">Correo Electrónico: *</label>
+                        <input type="email" id="correo" placeholder="marco@ejemplo.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="telefono">Número Telefónico: </label>
+                        <input type="tel" id="telefono" placeholder="(55) 1234-5678">
                     </div>
                 </div>
 
-                <!-- PASO 2: Información de Contacto -->
-                <div class="form-step" id="step-2">
-                    <fieldset>
-                        <legend>Información de Contacto</legend>
-                        <label for="email">Correo Electrónico:</label>
-                        <input type="email" id="email" placeholder="jessica.gutierrez@example.com" required>
-                        <br>
-                        <label for="telefono">Teléfono:</label>
-                        <input type="tel" id="telefono" placeholder="5551234567" required>
-                        <br>
-                        <label for="horarioContacto">Horario de Contacto:</label>
-                        <input type="time" id="horarioInicio" placeholder="09:00-18:00">
-                        <input type="time" id="horarioFin" placeholder="09:00-18:00">
-                        <br>
-                        <h4>Redes Sociales</h4>
-                        <input type="checkbox" id="socialNetwors1">
-                        <label for="urlFacebook">Facebook</label>
-                        <input type="url" placeholder="http://www.facebook.com/userName"> 
-                        <br>
-                        <input type="checkbox" id="socialNetwors2">
-                        <label>LinkedIn:</label>
-                        <input type="url" placeholder="http://www.linkedin.com/userName"> 
-                        <br>
-                        <input type="checkbox" id="socialNetwors3">
-                        <label>WhatsApp: (cargar QR)</label>
-                        <input type="file" id="whatsAppQR" accept="image/*"> 
-                    </fieldset>
-
-                    <div class="btn-container">
-                        <button type="button" class="btn-secundario" onclick="prevStep()">Anterior</button>
-                        <button type="button" onclick="nextStep()">Siguiente</button>
+                <h4>Horario preferido de contacto</h4>
+                <div class="grid-2-col">
+                    <div class="input-group">
+                        <label for="horarioContactoDesde">Desde</label>
+                        <input type="time" id="horarioContactoDesde" value="09:00">
+                    </div>
+                    <div class="input-group">
+                        <label for="horarioContactoHasta">Hasta</label>
+                        <input type="time" id="horarioContactoHasta" value="18:00">
                     </div>
                 </div>
 
-                <!-- PASO 3: Datos de Acceso -->
-                <div class="form-step" id="step-3">
-                    <fieldset>
-                        <legend>Datos de Acceso</legend>
-                        <label for="usuario">Nombre de Usuario:</label>
-                        <input type="text" id="usuario" placeholder="jessica123" required> 
-                        <br>
-                        <label for="contrasena">Contraseña:</label>
-                        <input type="password" id="contrasena" placeholder="**********" required>
-                        <br>
-                        <label for="confirmarContrasena">Confirmar Contraseña:</label>
-                        <input type="password" id="confirmarContrasena" placeholder="**********" required>
-                    </fieldset>
-
-                    <div class="btn-container">
-                        <button type="button" class="btn-secundario" onclick="prevStep()">Anterior</button>
-                        <button type="button" onclick="nextStep()">Siguiente</button>
+                <h4>Redes sociales y mensajería</h4>
+                <div class="grid-2-col">
+                    <div class="input-group">
+                        <div>
+                            <input type="checkbox" id="socialFb" data-social="urlFacebook" data-ayuda="ayudaFb">
+                            <label for="socialFb">Facebook</label>
+                        </div>
+                        <input type="url" id="urlFacebook" placeholder="https://facebook.com/usuario" disabled>
+                        <small class="ayuda" id="ayudaFb" data-on="Ya puedes introducir la dirección de tu perfil." data-off="Activa la casilla para habilitar este campo."></small>
+                    </div>
+                    <div class="input-group">
+                        <div>
+                            <input type="checkbox" id="socialLk" data-social="urlLinkedin" data-ayuda="ayudaLk">
+                            <label for="socialLk">LinkedIn</label>
+                        </div>
+                        <input type="url" id="urlLinkedin" placeholder="https://linkedin.com/in/usuario" disabled>
+                        <small class="ayuda" id="ayudaLk" data-on="Ya puedes introducir la dirección de tu perfil." data-off="Activa la casilla para habilitar este campo."></small>
+                    </div>
+                    <div class="input-group span-2">
+                        <div>
+                            <input type="checkbox" id="socialWa" data-social="whatsAppQr" data-ayuda="ayudaWa">
+                            <label for="socialWa">WhatsApp: Adjuntar QR</label>
+                        </div>
+                        <input type="file" id="whatsAppQr" accept="image/*" style="margin-top: 10px;" disabled>
+                        <small class="ayuda" id="ayudaWa" data-on="Selecciona la imagen de tu código QR." data-off="Activa la casilla para habilitar este campo."></small>
                     </div>
                 </div>
 
-                <!-- PASO 4: Datos de Ubicación -->
-                <div class="form-step" id="step-4">
-                    <fieldset>
-                        <legend>Datos de Ubicación</legend>
-                        <label for="direccion">Dirección:</label>
-                        <input type="text" id="direccion" placeholder="Calle Principal 123" required>  
-                        <br>
-                        <label for="pais">País:</label>
-                        <select id="pais" required>
-                            <option value="México">México</option>
+                <div id="preview-container" class="preview-card">
+                    <h4><i class="fas fa-th-large"></i> Vista previa de WhatsApp</h4>
+                    <p class="preview-text">Selecciona un archivo de imagen para visualizar tu código QR.</p>
+                    <div class="preview-box">
+                        <img id="qrPreview" src="" alt="Vista previa QR" class="oculta">
+                        <div id="qrError" class="preview-error oculta"><i class="fas fa-exclamation-circle"></i><br>No se puede mostrar el archivo cargado.</div>
+                        <div id="preview-placeholder">
+                            <i class="fas fa-image fa-3x"></i>
+                            <p style="margin-top: 10px; font-size: 0.85rem;">Ningún archivo seleccionado</p>
+                        </div>
+                    </div>
+                    <div id="qrAcciones" class="preview-acciones oculta">
+                        <span id="qrNombre"></span>
+                        <button type="button" id="quitarQr" class="btn-secondary"><i class="fas fa-times"></i> Quitar archivo</button>
+                    </div>
+                    <p class="preview-note">Solo vista previa local; no se envía al servidor.</p>
+                </div>
+                <div class="btn-group between">
+                    <button type="button" class="btn-secondary" onclick="moverPaso(-1)">&laquo; Anterior</button>
+                    <div style="display:flex; gap:10px;"><input type="reset" class="btn-secondary" value="Limpiar"><button type="button" class="btn-primary" onclick="moverPaso(1)">Siguiente paso &raquo;</button></div>
+                </div>
+            </fieldset>
+
+            <!-- PASO 3 -->
+            <fieldset class="wizard-paso" id="paso-2">
+                <legend>Datos de Acceso</legend>
+                <div class="grid-2-col">
+                    <div class="input-group span-2">
+                        <label for="usuario">Nombre de usuario: *</label>
+                        <input type="text" id="usuario" placeholder="brianisael" autocomplete="username" required>
+                        <small class="ayuda">Utiliza al menos 4 caracteres.</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="contrasena">Contraseña: *</label>
+                        <div class="campo-password">
+                            <input type="password" id="contrasena" placeholder="**********" autocomplete="new-password" required>
+                            <button type="button" class="btn-ojo" data-ojo="contrasena" aria-label="Mostrar contraseña"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmarContrasena">Confirmar contraseña: *</label>
+                        <div class="campo-password">
+                            <input type="password" id="confirmarContrasena" placeholder="***********" autocomplete="new-password" required>
+                            <button type="button" class="btn-ojo" data-ojo="confirmarContrasena" aria-label="Mostrar contraseña"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <small class="ayuda">Requisitos: mínimo 6 caracteres, al menos una mayúscula y un símbolo especial. Ambas contraseñas deben coincidir. Validación realizada con expresiones regulares en JavaScript.</small>
+                <div class="btn-group between">
+                    <button type="button" class="btn-secondary" onclick="moverPaso(-1)">&laquo; Anterior</button>
+                    <div style="display:flex; gap:10px;"><input type="reset" class="btn-secondary" value="Limpiar"><button type="button" class="btn-primary" onclick="moverPaso(1)">Siguiente paso &raquo;</button></div>
+                </div>
+            </fieldset>
+
+            <!-- PASO 4 -->
+            <fieldset class="wizard-paso" id="paso-3">
+                <legend>Datos de Ubicación</legend>
+                <div class="grid-2-col">
+                    <div class="input-group span-2">
+                        <label for="direccion">Calle y número: *</label>
+                        <input type="text" id="direccion" placeholder="Ej. Av. Juárez 125, Col. Centro" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="pais">País: *</label>
+                        <input type="text" id="pais" list="listaPaises" value="México" required>
+                        <datalist id="listaPaises"></datalist>
+                    </div>
+                    <div class="input-group">
+                        <label for="estado">Estado / entidad federativa: *</label>
+                        <input type="text" id="estado" list="listaEstados" placeholder="Ej. Puebla" required>
+                        <datalist id="listaEstados"></datalist>
+                    </div>
+                    <div class="input-group">
+                        <label for="ciudad">Ciudad / municipio: *</label>
+                        <input type="text" id="ciudad" list="listaCiudades" placeholder="Ej. Xicotepec" required>
+                        <datalist id="listaCiudades"></datalist>
+                    </div>
+                    <div class="input-group">
+                        <label for="codigoPostal">Código postal:</label>
+                        <input type="text" id="codigoPostal" inputmode="numeric" maxlength="10" placeholder="73080">
+                    </div>
+                </div>
+                <p id="notaCp" class="nota-cp oculta"><i class="fas fa-info-circle"></i> Código postal sugerido para una colonia de ejemplo. Confirma tu CP real antes de continuar.</p>
+                <div class="btn-group between">
+                    <button type="button" class="btn-secondary" onclick="moverPaso(-1)">&laquo; Anterior</button>
+                    <div style="display:flex; gap:10px;"><input type="reset" class="btn-secondary" value="Limpiar"><button type="button" class="btn-primary" onclick="moverPaso(1)">Siguiente paso &raquo;</button></div>
+                </div>
+            </fieldset>
+
+            <!-- PASO 5 -->
+            <fieldset class="wizard-paso" id="paso-4">
+                <legend>Facturación (opcional)</legend>
+                <div class="checkbox-linea">
+                    <input type="checkbox" id="quiereFactura">
+                    <label for="quiereFactura">Deseo proporcionar datos de facturación</label>
+                </div>
+
+                <div id="bloqueFactura" class="grid-2-col">
+                    <div class="input-group">
+                        <label for="rfc">RFC <span id="rfcAst" class="oculta">*</span></label>
+                        <input type="text" id="rfc" maxlength="13" placeholder="Ej. ABCD010203XYZ" data-fiscal>
+                    </div>
+                    <div class="input-group">
+                        <label for="razonSocial">Nombre o razón social</label>
+                        <input type="text" id="razonSocial" placeholder="Nombre para facturación" data-fiscal>
+                    </div>
+                    <div class="input-group">
+                        <label for="regimenFiscal">Régimen fiscal</label>
+                        <select id="regimenFiscal" data-fiscal>
+                            <option value="">Seleccionar régimen</option>
+                            <option value="601">601 · General de Ley Personas Morales</option>
+                            <option value="605">605 · Sueldos y Salarios</option>
+                            <option value="612">612 · Personas Físicas con Actividades Empresariales y Profesionales</option>
+                            <option value="621">621 · Incorporación Fiscal</option>
+                            <option value="626">626 · Régimen Simplificado de Confianza</option>
                         </select>
-                        <br>
-                        <label for="estado">Estado:</label>
-                        <select id="estado" required>
-                            <option value="">Selecciona un estado...</option>
+                    </div>
+                    <div class="input-group">
+                        <label for="usoCfdi">Uso del CFDI</label>
+                        <select id="usoCfdi" data-fiscal>
+                            <option value="">Seleccionar uso</option>
+                            <option value="G01">G01 · Adquisición de mercancías</option>
+                            <option value="G03">G03 · Gastos en general</option>
+                            <option value="P01">P01 · Por definir</option>
+                            <option value="S01">S01 · Sin efectos fiscales</option>
                         </select>
-                        <br>
-                        <label for="ciudad">Ciudad / Localidad:</label>
-                        <input list="ciudadesList" id="ciudad" placeholder="Selecciona o escribe la ciudad..." required>
-                        <datalist id="ciudadesList">
-                            <!-- Se llena dinámicamente -->
-                        </datalist>
-                        <br>
-                        <label for="codigoPostal">Código Postal:</label>
-                        <input list="cpList" id="codigoPostal" placeholder="Selecciona o escribe el CP..." maxlength="5" required>
-                        <datalist id="cpList">
-                            <!-- Se llena dinámicamente -->
-                        </datalist>
-                    </fieldset>
-
-                    <div class="btn-container">
-                        <button type="button" class="btn-secundario" onclick="prevStep()">Anterior</button>
-                        <button type="button" onclick="nextStep()">Siguiente</button>
+                    </div>
+                    <div class="input-group">
+                        <label for="cpFiscal">Código postal fiscal</label>
+                        <input type="text" id="cpFiscal" inputmode="numeric" maxlength="5" placeholder="5 dígitos" data-fiscal>
+                    </div>
+                    <div class="input-group">
+                        <label for="fiscalSituacion">Constancia de situación fiscal (PDF)</label>
+                        <input type="file" id="fiscalSituacion" accept=".pdf" data-fiscal>
+                        <small class="ayuda">Archivo opcional. La carga real y su revisión se implementarán en PHP.</small>
                     </div>
                 </div>
+                <input type="hidden" id="userIdFiscal" value="25XXXX">
+                <p class="nota-pie">Datos de ejemplo para fines académicos. Antes de una facturación real, deberán comprobarse los catálogos del SAT, el régimen y los requisitos de CFDI vigentes.</p>
 
-                <!-- PASO 5: Confirmación y Secciones Adicionales -->
-                <div class="form-step" id="step-5">
-                    <fieldset>
-                        <legend>Confirmación y Términos</legend>
-                        <input type="checkbox" value="validado" required> Acepto los términos y condiciones del uso de la plataforma MecaGest.
-                    </fieldset>
-
-                    <!-- SECCIÓN DE CITAS -->
-                    <fieldset>
-                        <legend>Visualización de Citas por:</legend>
-                        <label>Por favor elige el filtro:</label>
-                        <input type="radio" value="Month" name="appoimentFilter" checked>Mes
-                        <input type="radio" value="Week" name="appoimentFilter">Semana
-                        <input type="month">
-                        <input type="week" disabled>
-                        <button type="button" id="verCitas">Ver Citas</button>
-                        <br><br>
-                        <h4>Las citas programadas para el mes/semana elegido son:</h4>
-                        <br>
-                        <table>
-                            <tr>
-                                <th>No.</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Fecha Programada</th>
-                                <th>Estatus Actual</th>
-                            </tr>
-                            <tr>
-                                <td>1.</td>
-                                <td>Cita de entrega de unidad reparada con el cliente: Mauricio Mejía, Unidad: Volkswagen, Jetta 2020</td>
-                                <td>Se realizó un cambio de bujías, la unidad está lista para entrega</td>
-                                <td>10 de Octubre de 2026</td>
-                                <td>Atendida</td>
-                            </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td>Cita de valoración con el cliente: Maria del angel, Unidad: Renault, Duster 2014</td>
-                                <td>El cliente solicita una revisión del cuerpo de aceleración.</td>
-                                <td>16 de Octubre de 2026</td>
-                                <td>Programada</td>
-                            </tr>
-                            <tr>
-                                <td>3.</td>
-                                <td>Cita de revisión con el cliente: Mauricio Mejía, Unidad: Volkswagen, Jetta 2020</td>
-                                <td>A la unidad se le hicieron cambio de bujías, pero el cliente reporta un sonido extraño.</td>
-                                <td>17 de Octubre de 2026</td>
-                                <td>Programada</td>
-                            </tr>
-                            <tr>
-                                <td>4.</td>
-                                <td>Cita de valoración con la cliente: Alejandra Romero, Unidad: Toyota, Hilux 2012</td>
-                                <td>El cliente solicita una revisión del cuerpo de aceleración.</td>
-                                <td>16 de Octubre de 2026</td>
-                                <td>Cancelada</td>
-                            </tr>
-                            <tr>
-                                <td>5.</td>
-                                <td>Cita de valoración con la cliente: Alejandra Romero, Unidad: Toyota, Hilux 2012</td>
-                                <td>El cliente solicita una revisión del cuerpo de aceleración.</td>
-                                <td>20 de Octubre de 2026</td>
-                                <td>Reprogramada</td>
-                            </tr>
-                        </table>
-                    </fieldset>
-
-                    <!-- CONFIGURACIONES DE LA INTERFAZ -->
-                    <fieldset>
-                        <legend>Configuraciones de la Interfaz:</legend>
-                        <label for="fontColor">Color de la Fuente</label>
-                        <input type="color" id="fontColor">
-                        <br>
-                        <label for="backgroundColor">Color de Fondo</label>
-                        <input type="color" id="backgroundColor" value="#CCC">
-                        <br>
-                        <label for="soundsVolume">Volumen de reproducción de sonidos</label>
-                        <input type="range" id="soundsVolume" min="0" max="100" value="80"> 
-                        <button type="button" id="muteSounds">Silenciar Sonidos</button>
-                    </fieldset>
-
-                    <!-- CONFIGURACIÓN DE PERFIL -->
-                    <fieldset>
-                        <legend>Configuración de Mi cuenta/Perfil:</legend>
-                        <label for="userPhoto">Foto de Perfil:</label>
-                        <input type="file" id="userPhoto" accept="image/*">
-                        <br>
-                        <input type="hidden" id="userId" value="250910">
-                    </fieldset>
-
-                    <!-- DATOS FISCALES -->
-                    <fieldset>
-                        <legend>Datos fiscales:</legend>
-                        <label for="rfc">Registro Federal de Causantes (RFC):</label>
-                        <input type="text" id="rfc" maxlength="13" placeholder="RAHMXXXXXX">
-                        <br>
-                        <label for="fiscalSituación">Constancia de Situación Fiscal:</label>
-                        <input type="file" id="fiscalSituación" accept=".pdf">
-                    </fieldset>
-
-                    <!-- SOLICITUD DE CITA -->
-                    <fieldset>
-                        <legend>Solicitud de cita</legend>
-                        <label for="dateAppoiment">Fecha de la cita:</label>
-                        <input type="datetime-local" id="dateAppoiment">
-                        <br>
-                        <label>Elige la sucursal:</label>
-                        <input list="locationsList">
-                        <datalist id="locationsList">
-                            <option value="Xicotepec, Centro">
-                            <option value="Xicotepec, El Tabacal">
-                            <option value="San Isidro, Tierra Negra">
-                            <option value="Necaxa, Canaditas">
-                            <option value="Huauchinango, Petrolera 1">
-                        </datalist>
-                        <br>
-                        <label for="descriptionText">Descripción de la cita:</label>
-                        <textarea id="descriptionText"></textarea>
-                    </fieldset>
-
-                    <!-- SOLICITUD DE HERRAMIENTAS -->
-                    <fieldset>
-                        <legend>Solicitud de Herramientas para Servicio Mecánico:</legend>
-                        <label>Elige la pieza:</label>
-                        <input type="radio" name="resourceCategory" value="refaccion">Refacción
-                        <input type="radio" name="resourceCategory" value="tool">Herramienta
-                        <br>
-                        <label>Elige la Pieza:</label>
-                        <select>
-                            <optgroup label="Pieza de Motor">
-                                <option value="bujia">Bujía</option>
-                                <option value="filtro_aceite">Filtro de aceite</option>
-                                <option value="banda_distribución">Banda de distribución</option>
-                            </optgroup>  
-                            <optgroup label="Piezas de transmisión">
-                                <option value="disco_embrague">Disco de embrague</option>
-                                <option value="collarin">Collarín de embrague</option>
-                                <option value="junta_homocinetica">Junta homocinética</option>
-                                <option value="semieje">Semieje de transmisión</option>
-                            </optgroup>   
-                            <optgroup label="Piezas de Suspensión">
-                                <option value="amortiguador">Amortiguador</option>
-                                <option value="rotula">Rótula de suspensión</option>
-                            </optgroup>    
-                            <optgroup label="Llaves y Herramientas Especializadas">
-                                <option value="llave_combinada">Llave combinada</option>
-                                <option value="llave_torx">Llave Torx</option>
-                                <option value="Llave_dinamometrica">Llave dinamométrica</option>
-                                <option value="extractor_poleas">Extractor de poleas</option>
-                                <option value="compresor_resortes">Compresor de resortes</option>
-                                <option value="scanner_obd2">Escáner automotriz OBD-II</option>
-                            </optgroup>
-                        </select>
-                        <br>
-                        <label for="toolQuantity">Cantidad</label>
-                        <input type="number" id="toolQuantity" min="1" max="10">
-                        <button type="button" id="requestTool">Solicitar Herramienta</button>
-                        <br><br>
-                        <table>
-                            <tr>
-                                <th>No.</th>
-                                <th>Herramienta</th>
-                                <th>Categoría</th>
-                                <th>Cantidad</th>
-                                <th>Unidad</th>
-                            </tr>
-                            <tr>
-                                <td>1.</td>
-                                <td>Llave combinada</td>
-                                <td>Herramienta manual</td>
-                                <td>4</td>
-                                <td>piezas</td>
-                            </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td>Llave dinamométrica</td>
-                                <td>Herramienta especializada</td>
-                                <td>2</td>
-                                <td>piezas</td>
-                            </tr>
-                            <tr>
-                                <td>3.</td>
-                                <td>Extractor de poleas</td>
-                                <td>Herramienta especializada</td>
-                                <td>1</td>
-                                <td>juegos</td>
-                            </tr>
-                            <tr>
-                                <td>4.</td>
-                                <td>Llave Torx</td>
-                                <td>Herramienta manual</td>
-                                <td>3</td>
-                                <td>juegos</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>Total de unidades</td>
-                                <td>10</td>
-                                <td>-</td>
-                            </tr>
-                        </table>
-                    </fieldset>
-
-                    <div class="btn-container">
-                        <button type="button" class="btn-secundario" onclick="prevStep()">Anterior</button>
-                        <input type="submit" value="Enviar Solicitud">
-                        <input type="reset" value="Limpiar Formulario">
-                    </div>
+                <div class="checkbox-linea">
+                    <input type="checkbox" id="terminos" value="validado" required>
+                    <label for="terminos">Acepto los términos y condiciones de uso de la plataforma MecaGest. *</label>
                 </div>
+                <div class="btn-group between">
+                    <button type="button" class="btn-secondary" onclick="moverPaso(-1)">&laquo; Anterior</button>
+                    <div style="display:flex; gap:10px;"><input type="reset" class="btn-secondary" value="Limpiar"><input type="submit" class="btn-success" value="Enviar Solicitud"></div>
+                </div>
+            </fieldset>
+        </form>
+    </main>
 
-            </form>
-        </main>
-    </div>
-
-    <!-- Carga de scripts -->
-    <script src="js/domicilios.js"></script>
-    <script src="js/domicilios.json"></script>
-    <script src="js/script.js"></script>
 </body>
 </html>

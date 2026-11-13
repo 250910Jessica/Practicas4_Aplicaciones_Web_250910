@@ -3,365 +3,410 @@
 // ==========================================
 console.log("Hola Mundo, desde JavaScript");
 
-// Variables globales para el control del Wizard
-let currentStep = 1;
-const totalSteps = 5;
+// ---------------------------------------------------------------
+// Utilidades de errores y estado de campos
+// ---------------------------------------------------------------
+let pasoActual = 0;
+const MSG_OBLIGATORIO = "Este campo es obligatorio.";
 
-// ==========================================
-// INICIALIZACIÓN Y VALIDACIONES (DOMContentLoaded)
-// ==========================================
-document.addEventListener("DOMContentLoaded", function () {
-    const fechaNacimiento = document.getElementById("fechaNacimiento");
-    const resultadoEdad = document.getElementById("resultadoEdad");
+function norm(t) {
+    return (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
 
-    function calcularEdad() {
-        if (!fechaNacimiento || !resultadoEdad) return;
+function limpiarError(el) {
+    el.classList.remove("campo-error");
+    document.querySelectorAll('.mensaje-error-campo[data-para="' + el.id + '"]').forEach(s => s.remove());
+}
 
-        resultadoEdad.classList.remove(
-            "edad-estado--mayor",
-            "edad-estado--menor",
-            "edad-estado--error"
-        );
-
-        if (fechaNacimiento.value === "") {
-            resultadoEdad.textContent = "Selecciona una fecha para calcular tu edad.";
-            return;
-        }
-
-        const [anio, mes, dia] = fechaNacimiento.value.split("-").map(Number);
-        const nacimiento = new Date(anio, mes - 1, dia);
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
-
-        if (nacimiento > hoy) {
-            resultadoEdad.textContent = "Error: la fecha de nacimiento no puede ser futura.";
-            resultadoEdad.classList.add("edad-estado--error");
-            return;
-        }
-
-        let edad = hoy.getFullYear() - nacimiento.getFullYear();
-        const diferenciaMes = hoy.getMonth() - nacimiento.getMonth();
-
-        if (
-            diferenciaMes < 0 ||
-            (diferenciaMes === 0 && hoy.getDate() < nacimiento.getDate())
-        ) {
-            edad--;
-        }
-
-        if (edad >= 18) {
-            resultadoEdad.textContent = "Eres mayor de edad. Tienes " + edad + " años.";
-            resultadoEdad.classList.add("edad-estado--mayor");
-        } else {
-            resultadoEdad.textContent = "Eres menor de edad. Tienes " + edad + " años.";
-            resultadoEdad.classList.add("edad-estado--menor");
-        }
+function mostrarError(el, msg) {
+    limpiarError(el);
+    el.classList.add("campo-error");
+    el.classList.remove("campo-lleno");
+    const s = document.createElement("span");
+    s.className = "mensaje-error-campo";
+    s.dataset.para = el.id;
+    s.textContent = msg;
+    if (el.type === "checkbox") {
+        el.parentNode.appendChild(s);
+    } else {
+        (el.closest(".campo-password") || el).insertAdjacentElement("afterend", s);
     }
+}
 
-    if (fechaNacimiento) {
-        fechaNacimiento.addEventListener("change", calcularEdad);
-        fechaNacimiento.addEventListener("input", calcularEdad);
-        calcularEdad();
+function evaluarCampo(input) {
+    if (input.type === "checkbox" || input.type === "radio") return;
+    if (input.value && input.value.trim() !== "") {
+        input.classList.add("campo-lleno");
+        limpiarError(input);
+    } else {
+        input.classList.remove("campo-lleno");
     }
+}
 
-    // Inicializar catálogos de ubicación
-    cargarEstadosMexico();
-
-    const selectEstado = document.getElementById('estado');
-    const inputCiudad = document.getElementById('ciudad');
-
-    if (selectEstado) {
-        selectEstado.addEventListener('change', () => {
-            actualizarCiudadesPorEstado();
-            checkInputState(selectEstado);
-        });
+// ---------------------------------------------------------------
+// Validadores (se ejecutan solo si el campo tiene contenido)
+// ---------------------------------------------------------------
+function urlValida(v, host) {
+    try {
+        const u = new URL(v);
+        return (/^https?:$/.test(u.protocol) && u.hostname.toLowerCase().endsWith(host)) ||
+            "Escribe una URL de " + host + " válida.";
+    } catch (e) {
+        return "Escribe una URL válida (ej. https://" + host + "/usuario).";
     }
+}
 
-    if (inputCiudad) {
-        inputCiudad.addEventListener('input', () => {
-            actualizarCPPorCiudad();
-            checkInputState(inputCiudad);
-        });
-        inputCiudad.addEventListener('change', () => {
-            actualizarCPPorCiudad();
-            checkInputState(inputCiudad);
-        });
+const VALIDADORES = {
+    correo: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || "Escribe un correo válido: usuario@dominio.ext.",
+    telefono: v => {
+        const d = v.replace(/\D/g, "");
+        return (/^\+?[\d\s().-]+$/.test(v) && d.length >= 10 && d.length <= 13) ||
+            "Escribe un teléfono válido (10 a 13 dígitos, sin letras).";
+    },
+    urlFacebook: v => urlValida(v, "facebook.com"),
+    urlLinkedin: v => urlValida(v, "linkedin.com"),
+    usuario: v => (v.length >= 4 && !/\s/.test(v)) || "Utiliza al menos 4 caracteres, sin espacios.",
+    contrasena: v => /^(?=.*[A-Z])(?=.*[^A-Za-z0-9\s])\S{6,}$/.test(v) ||
+        "Mínimo 6 caracteres, una mayúscula y un símbolo especial, sin espacios.",
+    confirmarContrasena: v => v === document.getElementById("contrasena").value || "Las contraseñas no coinciden.",
+    rfc: v => /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i.test(v) || "Escribe un RFC válido (ej. ABCD010203XYZ).",
+    cpFiscal: v => /^\d{5}$/.test(v) || "El código postal fiscal debe tener 5 dígitos.",
+    codigoPostal: v => {
+        const pais = document.getElementById("pais");
+        if (pais && norm(pais.value) !== "mexico") return true;
+        return /^\d{5}$/.test(v) || "El código postal debe tener 5 dígitos.";
     }
+};
 
-    // Subrayado dinámico de casillas
-    const inputs = document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="reset"]), select, textarea');
+// ---------------------------------------------------------------
+// Wizard
+// ---------------------------------------------------------------
+function validarPasoActual(i) {
+    const pasos = document.querySelectorAll(".wizard-paso");
+    const paso = pasos[i];
+    if (!paso) return true;
+    let ok = true;
 
-    inputs.forEach(input => {
-        input.addEventListener('input', () => checkInputState(input));
-        input.addEventListener('change', () => checkInputState(input));
+    paso.querySelectorAll("input, select, textarea").forEach(el => {
+        if (el.disabled || !el.id) return;
+        limpiarError(el);
+
+        if (el.required) {
+            const vacio = el.type === "checkbox" ? !el.checked : (!el.value || !el.value.trim());
+            if (vacio) {
+                ok = false;
+                mostrarError(el, el.id === "terminos" ? "Debes aceptar los términos y condiciones." : MSG_OBLIGATORIO);
+                return;
+            }
+        }
+        if (el.type !== "checkbox" && el.type !== "file" && el.value.trim() && VALIDADORES[el.id]) {
+            const r = VALIDADORES[el.id](el.value.trim());
+            if (r !== true) {
+                ok = false;
+                mostrarError(el, r);
+            }
+        }
     });
 
-    function checkInputState(input) {
-        if (input.value.trim() !== '') {
-            input.classList.add('filled');
-        } else {
-            input.classList.remove('filled');
-        }
-        updateWizardProgress();
+    // Horario: la hora final debe ser posterior a la inicial
+    const desde = paso.querySelector("#horarioContactoDesde");
+    const hasta = paso.querySelector("#horarioContactoHasta");
+    if (desde && hasta && desde.value && hasta.value && desde.value >= hasta.value) {
+        ok = false;
+        mostrarError(hasta, "La hora final debe ser posterior a la inicial.");
     }
 
-    // Inicializar estado de la barra al cargar
-    updateWizardProgress();
+    // Constancia fiscal: solo PDF
+    const pdf = paso.querySelector("#fiscalSituacion");
+    if (pdf && !pdf.disabled && pdf.files[0] && !/\.pdf$/i.test(pdf.files[0].name)) {
+        ok = false;
+        mostrarError(pdf, "Solo se permiten archivos PDF.");
+    }
 
-    const form = document.getElementById('multiStepForm');
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (validateStep()) {
-                alert('¡Solicitud de registro enviada con éxito!');
+    const alertaGlobal = document.getElementById("alerta-global");
+    if (alertaGlobal) alertaGlobal.classList.toggle("oculta", ok);
+    return ok;
+}
+
+function irAPaso(n) {
+    const pasos = document.querySelectorAll(".wizard-paso");
+    const indicadores = document.querySelectorAll(".wizard-paso-item");
+    pasoActual = Math.max(0, Math.min(n, pasos.length - 1));
+    pasos.forEach((p, i) => p.classList.toggle("paso-activo", i === pasoActual));
+    indicadores.forEach((it, i) => {
+        it.classList.toggle("activo", i === pasoActual);
+        it.classList.toggle("completado", i < pasoActual);
+    });
+    const barra = document.querySelector(".wizard-bar");
+    if (barra) barra.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function moverPaso(incremento) {
+    if (incremento > 0 && !validarPasoActual(pasoActual)) return;
+    const alertaGlobal = document.getElementById("alerta-global");
+    if (alertaGlobal) alertaGlobal.classList.add("oculta");
+    irAPaso(pasoActual + incremento);
+}
+
+// ---------------------------------------------------------------
+// Inicio
+// ---------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("MecaGest cargado correctamente");
+
+    // 1. Subrayado automático y limpieza de errores
+    document.querySelectorAll("input, select, textarea").forEach(campo => {
+        evaluarCampo(campo);
+        campo.addEventListener("input", () => evaluarCampo(campo));
+        campo.addEventListener("change", () => {
+            evaluarCampo(campo);
+            if (campo.type === "checkbox") limpiarError(campo);
+        });
+    });
+
+    // 2. Edad
+    const fechaNacimiento = document.getElementById("fechaNacimiento");
+    const resultadoEdad = document.getElementById("resultadoEdad");
+    if (fechaNacimiento && resultadoEdad) {
+        fechaNacimiento.addEventListener("change", function () {
+            resultadoEdad.classList.remove("edad-estado--mayor", "edad-estado--menor", "edad-estado--error");
+            if (fechaNacimiento.value === "") {
+                resultadoEdad.textContent = "Selecciona una fecha para calcular tu edad.";
+                return;
+            }
+            const [anio, mes, dia] = fechaNacimiento.value.split("-").map(Number);
+            const nacimiento = new Date(anio, mes - 1, dia);
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            if (nacimiento > hoy) {
+                resultadoEdad.textContent = "Error: no se puede calcular la edad con la fecha elegida (es futura).";
+                resultadoEdad.classList.add("edad-estado--error");
+                return;
+            }
+            let edad = hoy.getFullYear() - nacimiento.getFullYear();
+            const dm = hoy.getMonth() - nacimiento.getMonth();
+            const dd = hoy.getDate() - nacimiento.getDate();
+            if (dm < 0 || (dm === 0 && dd < 0)) edad--;
+            if (edad >= 18) {
+                resultadoEdad.textContent = `Eres mayor de edad. Tienes ${edad} años.`;
+                resultadoEdad.classList.add("edad-estado--mayor");
+            } else {
+                resultadoEdad.textContent = `Eres menor de edad. Tienes ${edad} años.`;
+                resultadoEdad.classList.add("edad-estado--menor");
             }
         });
     }
-});
 
-// ==========================================
-// FUNCIONES DE UBICACIÓN DINÁMICAS (DOMICILIOS.JS)
-// ==========================================
-function cargarEstadosMexico() {
-    const selectEstado = document.getElementById('estado');
-    if (!selectEstado || !window.MECAGEST_DOMICILIOS) return;
-
-    selectEstado.innerHTML = '<option value="">Selecciona un estado...</option>';
-    
-    window.MECAGEST_DOMICILIOS.estadosMexico.forEach(estado => {
-        const option = document.createElement('option');
-        option.value = estado;
-        option.textContent = estado;
-        selectEstado.appendChild(option);
-    });
-}
-
-function actualizarCiudadesPorEstado() {
-    const estadoSeleccionado = document.getElementById('estado').value;
-    const datalistCiudades = document.getElementById('ciudadesList');
-    const inputCiudad = document.getElementById('ciudad');
-    const inputCP = document.getElementById('codigoPostal');
-    
-    if (!datalistCiudades || !window.MECAGEST_DOMICILIOS) return;
-
-    datalistCiudades.innerHTML = '';
-    inputCiudad.value = '';
-    inputCP.value = '';
-
-    const filtrados = window.MECAGEST_DOMICILIOS.ejemplosMexico.filter(item => item.estado === estadoSeleccionado);
-    const ciudadesUnicas = [...new Set(filtrados.map(item => item.ciudad))];
-
-    ciudadesUnicas.forEach(ciudad => {
-        const option = document.createElement('option');
-        option.value = ciudad;
-        datalistCiudades.appendChild(option);
-    });
-}
-
-function actualizarCPPorCiudad() {
-    const estadoSeleccionado = document.getElementById('estado').value;
-    const ciudadSeleccionada = document.getElementById('ciudad').value;
-    const datalistCP = document.getElementById('cpList');
-    const inputCP = document.getElementById('codigoPostal');
-
-    if (!datalistCP || !window.MECAGEST_DOMICILIOS) return;
-
-    datalistCP.innerHTML = '';
-    inputCP.value = '';
-
-    const filtrados = window.MECAGEST_DOMICILIOS.ejemplosMexico.filter(
-        item => item.estado === estadoSeleccionado && item.ciudad.toLowerCase() === ciudadSeleccionada.toLowerCase()
-    );
-
-    filtrados.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.cp;
-        option.textContent = `${item.cp} - ${item.colonia}`;
-        datalistCP.appendChild(option);
+    // 3. Mostrar / ocultar contraseña
+    document.querySelectorAll("[data-ojo]").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const inp = document.getElementById(btn.dataset.ojo);
+            const mostrar = inp.type === "password";
+            inp.type = mostrar ? "text" : "password";
+            btn.innerHTML = mostrar ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+            btn.setAttribute("aria-label", mostrar ? "Ocultar contraseña" : "Mostrar contraseña");
+        });
     });
 
-    if (filtrados.length === 1) {
-        inputCP.value = filtrados[0].cp;
-    }
-}
+    // 4. Vista previa del QR de WhatsApp
+    const qrInput = document.getElementById("whatsAppQr");
+    const imgPreview = document.getElementById("qrPreview");
+    const placeholder = document.getElementById("preview-placeholder");
+    const qrError = document.getElementById("qrError");
+    const qrNombre = document.getElementById("qrNombre");
+    const qrAcciones = document.getElementById("qrAcciones");
+    const qrQuitar = document.getElementById("quitarQr");
 
-// ==========================================
-// FUNCIONES GLOBALES DE NAVEGACIÓN
-// ==========================================
-window.nextStep = function() {
-    if (validateStep()) {
-        if (currentStep < totalSteps) {
-            setFormMessage(currentStep, '');
-            
-            document.getElementById(`step-${currentStep}`).classList.remove('active');
-            currentStep++;
-            document.getElementById(`step-${currentStep}`).classList.add('active');
-            updateSidebarActive();
-            updateWizardProgress();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    function resetPreview() {
+        if (!qrInput) return;
+        qrInput.value = "";
+        imgPreview.src = "";
+        imgPreview.classList.add("oculta");
+        qrError.classList.add("oculta");
+        placeholder.classList.remove("oculta");
+        qrNombre.textContent = "";
+        qrAcciones.classList.add("oculta");
+    }
+    function errorPreview(nombre) {
+        imgPreview.classList.add("oculta");
+        placeholder.classList.add("oculta");
+        qrError.classList.remove("oculta");
+        qrNombre.textContent = "Archivo: " + nombre;
+        qrAcciones.classList.remove("oculta");
+    }
+
+    if (qrInput) {
+        qrInput.addEventListener("change", function () {
+            const file = qrInput.files && qrInput.files[0];
+            if (!file) { resetPreview(); return; }
+            qrNombre.textContent = "Archivo: " + file.name;
+            qrAcciones.classList.remove("oculta");
+            if (!file.type.startsWith("image/")) { errorPreview(file.name); return; }
+            const reader = new FileReader();
+            reader.onload = e => {
+                imgPreview.onerror = () => errorPreview(file.name);
+                imgPreview.src = e.target.result;
+                imgPreview.classList.remove("oculta");
+                placeholder.classList.add("oculta");
+                qrError.classList.add("oculta");
+            };
+            reader.onerror = () => errorPreview(file.name);
+            reader.readAsDataURL(file);
+        });
+        qrQuitar.addEventListener("click", resetPreview);
+    }
+
+    // 5. Redes sociales: se habilitan al marcar su casilla
+    function syncSocial(chk) {
+        const target = document.getElementById(chk.dataset.social);
+        const ayuda = document.getElementById(chk.dataset.ayuda);
+        target.disabled = !chk.checked;
+        if (ayuda) ayuda.textContent = chk.checked ? ayuda.dataset.on : ayuda.dataset.off;
+        if (!chk.checked) {
+            limpiarError(target);
+            if (target.type === "file") resetPreview(); else target.value = "";
+            evaluarCampo(target);
         }
     }
-};
-
-window.prevStep = function() {
-    if (currentStep > 1) {
-        setFormMessage(currentStep, '');
-        document.getElementById(`step-${currentStep}`).classList.remove('active');
-        currentStep--;
-        document.getElementById(`step-${currentStep}`).classList.add('active');
-        updateSidebarActive();
-        updateWizardProgress();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-};
-
-window.goToStep = function(targetStep) {
-    if (targetStep >= 1 && targetStep <= totalSteps) {
-        setFormMessage(currentStep, '');
-        const currentStepEl = document.getElementById(`step-${currentStep}`);
-        if (currentStepEl) {
-            currentStepEl.classList.remove('active');
-        }
-
-        currentStep = targetStep;
-
-        const nextStepEl = document.getElementById(`step-${currentStep}`);
-        if (nextStepEl) {
-            nextStepEl.classList.add('active');
-        }
-
-        updateSidebarActive();
-        updateWizardProgress();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-};
-
-function updateSidebarActive() {
-    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
-    navItems.forEach((item, index) => {
-        if (index + 1 === currentStep) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
+    document.querySelectorAll("[data-social]").forEach(chk => {
+        chk.addEventListener("change", () => syncSocial(chk));
+        syncSocial(chk);
     });
-}
 
-function updateWizardProgress() {
-    const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
-    const progressBar = document.getElementById('wizardProgress');
-    if (progressBar) progressBar.style.width = progressPercent + '%';
+    // 6. Facturación opcional
+    const chkFact = document.getElementById("quiereFactura");
+    function syncFactura() {
+        if (!chkFact) return;
+        document.querySelectorAll("[data-fiscal]").forEach(el => {
+            el.disabled = !chkFact.checked;
+            if (!chkFact.checked) { el.value = ""; limpiarError(el); evaluarCampo(el); }
+        });
+        document.getElementById("rfc").required = chkFact.checked;
+        document.getElementById("rfcAst").classList.toggle("oculta", !chkFact.checked);
+        document.getElementById("bloqueFactura").classList.toggle("bloque-deshabilitado", !chkFact.checked);
+    }
+    if (chkFact) { chkFact.addEventListener("change", syncFactura); syncFactura(); }
 
-    for (let i = 1; i <= totalSteps; i++) {
-        const stepItem = document.getElementById(`step-ind-${i}`);
-        const statusLabel = document.getElementById(`status-${i}`);
-        if (!stepItem) continue;
+    // 7. Domicilio asistido (catálogo local, sin API; se permite captura manual)
+    const DOM = window.MECAGEST_DOMICILIOS;
+    const pais = document.getElementById("pais");
+    const estado = document.getElementById("estado");
+    const ciudad = document.getElementById("ciudad");
+    const cp = document.getElementById("codigoPostal");
+    const notaCp = document.getElementById("notaCp");
 
-        const stepEl = document.getElementById(`step-${i}`);
-        let stepFilled = true;
-        if (stepEl) {
-            const stepInputs = stepEl.querySelectorAll('input[required], select[required]');
-            stepInputs.forEach(inp => {
-                if (inp.value.trim() === '') stepFilled = false;
-            });
-        }
-
-        stepItem.classList.remove('active', 'completed');
-
-        if (i < currentStep || (stepFilled && i === currentStep && i !== totalSteps)) {
-            stepItem.classList.add('completed');
-            if (statusLabel) statusLabel.textContent = "Completado";
-        } else if (i === currentStep) {
-            stepItem.classList.add('active');
-            if (statusLabel) statusLabel.textContent = "En proceso";
-        } else {
-            if (statusLabel) statusLabel.textContent = "Pendiente";
+    function llenarLista(id, items) {
+        const dl = document.getElementById(id);
+        if (!dl) return;
+        dl.innerHTML = "";
+        items.forEach(t => { const o = document.createElement("option"); o.value = t; dl.appendChild(o); });
+    }
+    function actualizarListas() {
+        if (!DOM || !pais) return;
+        const esMx = norm(pais.value) === "mexico";
+        llenarLista("listaEstados", esMx ? DOM.estadosMexico : []);
+        const ciudades = DOM.ejemplosMexico
+            .filter(x => esMx && (!estado.value || norm(x.estado) === norm(estado.value)))
+            .map(x => x.ciudad);
+        llenarLista("listaCiudades", ciudades);
+    }
+    function sugerirCP() {
+        if (!DOM || !ciudad || cp.dataset.manual) return;
+        const m = DOM.ejemplosMexico.find(x => norm(x.ciudad) === norm(ciudad.value) &&
+            (!estado.value || norm(x.estado) === norm(estado.value)));
+        if (m && norm(pais.value) === "mexico") {
+            if (!estado.value) { estado.value = m.estado; evaluarCampo(estado); }
+            cp.value = m.cp;
+            evaluarCampo(cp);
+            notaCp.classList.remove("oculta");
         }
     }
-}
+    if (DOM && pais) {
+        llenarLista("listaPaises", DOM.paises);
+        actualizarListas();
+        pais.addEventListener("input", actualizarListas);
+        estado.addEventListener("input", () => { actualizarListas(); sugerirCP(); });
+        ciudad.addEventListener("input", sugerirCP);
+        cp.addEventListener("input", () => {
+            cp.dataset.manual = cp.value ? "1" : "";
+            if (!cp.value) notaCp.classList.add("oculta");
+        });
+    }
 
-// ==========================================
-// VALIDACIONES DE PASOS
-// ==========================================
-function validateStep() {
-    const currentStepEl = document.getElementById(`step-${currentStep}`);
-    if (!currentStepEl) return true;
-    
-    const stepInputs = currentStepEl.querySelectorAll('input[required], select[required]');
-    let isValid = true;
-    
-    stepInputs.forEach(input => {
-        if (input.value.trim() === '') {
-            isValid = false;
-            input.style.borderBottomColor = 'var(--rojo)';
+    // 8. Formulario de registro: enviar y limpiar
+    const form = document.getElementById("registroForm");
+    const mensajeSimulacion = document.getElementById("mensajeSimulacion");
+    if (form) {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const total = document.querySelectorAll(".wizard-paso").length;
+            if (pasoActual < total - 1) { moverPaso(1); return; }
+            for (let i = 0; i < total; i++) {
+                if (!validarPasoActual(i)) { irAPaso(i); return; }
+            }
+            mensajeSimulacion.classList.remove("oculta");
+            mensajeSimulacion.style.display = "block";
+            mensajeSimulacion.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+
+        form.addEventListener("reset", function () {
             setTimeout(() => {
-                input.style.borderBottomColor = '';
-            }, 1200);
-        }
-    });
-
-    if (!isValid) {
-        setFormMessage(currentStep, 'Por favor complete los campos obligatorios antes de continuar.');
-        return false;
+                form.querySelectorAll("input, select, textarea").forEach(el => { limpiarError(el); evaluarCampo(el); });
+                document.querySelectorAll("[data-social]").forEach(syncSocial);
+                syncFactura();
+                resetPreview();
+                if (cp) { cp.dataset.manual = ""; notaCp.classList.add("oculta"); }
+                actualizarListas();
+                if (resultadoEdad) {
+                    resultadoEdad.className = "";
+                    resultadoEdad.textContent = "Selecciona una fecha para calcular tu edad.";
+                }
+                const alertaGlobal = document.getElementById("alerta-global");
+                if (alertaGlobal) alertaGlobal.classList.add("oculta");
+                if (mensajeSimulacion) { mensajeSimulacion.classList.add("oculta"); mensajeSimulacion.style.display = "none"; }
+            }, 0);
+        });
     }
 
-    if (currentStep === 2) {
-        const email = document.getElementById('email')?.value.trim() || '';
-        const telefono = document.getElementById('telefono')?.value.trim() || '';
-
-        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const regexTelefono = /^\d{10}$/;
-
-        if (!regexEmail.test(email)) {
-            setFormMessage(currentStep, 'Por favor ingresa un correo electrónico válido (ej. usuario@dominio.com).');
-            return false;
-        }
-
-        if (!regexTelefono.test(telefono)) {
-            setFormMessage(currentStep, 'El número telefónico debe contener exactamente 10 dígitos numéricos.');
-            return false;
-        }
+    // 9. Próximas citas: el radio habilita solo su selector
+    const radiosFiltro = document.querySelectorAll('input[name="appoimentFilter"]');
+    if (radiosFiltro.length) {
+        const mes = document.getElementById("filtroMes");
+        const semana = document.getElementById("filtroSemana");
+        const sync = () => {
+            const porMes = document.getElementById("appoimentByMonth").checked;
+            mes.disabled = !porMes;
+            semana.disabled = porMes;
+        };
+        radiosFiltro.forEach(r => r.addEventListener("change", sync));
+        sync();
     }
 
-    if (currentStep === 3) {
-        const password = document.getElementById('contrasena')?.value || '';
-        const confirmPassword = document.getElementById('confirmarContrasena')?.value || '';
-
-        const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-        if (!regexPassword.test(password)) {
-            setFormMessage(currentStep, 'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un símbolo especial.');
-            return false;
-        }
-
-        if (password !== confirmPassword) {
-            setFormMessage(currentStep, 'Las contraseñas no coinciden.');
-            return false;
-        }
+    // 10. Salidas de almacén: el catálogo depende de la categoría
+    const radiosCat = document.querySelectorAll('input[name="ressourceCategory"]');
+    if (radiosCat.length) {
+        const select = document.getElementById("toolSelect");
+        const CATALOGO = {
+            refaccion: {
+                "Piezas de Motor": [["bujia", "Bujía"], ["filtro_aceite", "Filtro de aceite"], ["banda_distribucion", "Banda de distribución"]],
+                "Piezas de Transmisión": [["disco_embrague", "Disco de embrague"], ["collarin", "Collarín de embrague"], ["junta_homocinetica", "Junta homocinética"], ["semieje", "Semieje de transmisión"]],
+                "Piezas de Suspensión": [["amortiguador", "Amortiguador"], ["rotula", "Rótula de suspensión"]]
+            },
+            tool: {
+                "Llaves y Herramientas Especializadas": [["llave_combinada", "Llave combinada"], ["llave_torx", "Llave Torx"], ["llave_dinamometrica", "Llave dinamométrica"], ["compresor_resortes", "Compresor de Resortes"], ["scanner_obd2", "Escáner automotriz OBD-II"], ["extractor_poleas", "Extractor de Poleas"]]
+            }
+        };
+        const llenar = () => {
+            const cat = document.querySelector('input[name="ressourceCategory"]:checked').value;
+            select.innerHTML = '<option value="">Selecciona un recurso</option>';
+            Object.entries(CATALOGO[cat]).forEach(([grupo, items]) => {
+                const og = document.createElement("optgroup");
+                og.label = grupo;
+                items.forEach(([v, t]) => { const o = document.createElement("option"); o.value = v; o.textContent = t; og.appendChild(o); });
+                select.appendChild(og);
+            });
+        };
+        radiosCat.forEach(r => r.addEventListener("change", llenar));
+        llenar();
     }
-
-    setFormMessage(currentStep, '');
-    return true;
-}
-
-function setFormMessage(stepIndex, message) {
-    let msgContainer = document.getElementById(`step-msg-${stepIndex}`);
-    
-    if (!msgContainer) {
-        const stepEl = document.getElementById(`step-${stepIndex}`);
-        if (stepEl) {
-            msgContainer = document.createElement('div');
-            msgContainer.id = `step-msg-${stepIndex}`;
-            msgContainer.style.color = 'var(--rojo)';
-            msgContainer.style.fontSize = '0.85rem';
-            msgContainer.style.marginTop = '8px';
-            msgContainer.style.marginBottom = '12px';
-            msgContainer.style.fontWeight = '500';
-            stepEl.prepend(msgContainer);
-        }
-    }
-    
-    if (msgContainer) {
-        msgContainer.textContent = message;
-    }
-}
+});
