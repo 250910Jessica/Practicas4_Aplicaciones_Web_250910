@@ -28,6 +28,8 @@ function mostrarError(el, msg) {
     s.textContent = msg;
     if (el.type === "checkbox") {
         el.parentNode.appendChild(s);
+    } else if (el.id === "telefono" && document.getElementById("ayudaTelefono")) {
+        document.getElementById("ayudaTelefono").insertAdjacentElement("afterend", s);
     } else {
         (el.closest(".campo-password") || el).insertAdjacentElement("afterend", s);
     }
@@ -41,6 +43,31 @@ function evaluarCampo(input) {
     } else {
         input.classList.remove("campo-lleno");
     }
+}
+
+function calcularEdadDesdeFecha(valorFecha) {
+    if (!valorFecha) return null;
+    const [anio, mes, dia] = valorFecha.split("-").map(Number);
+    if (!anio || !mes || !dia) return null;
+    const nacimiento = new Date(anio, mes - 1, dia);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    if (nacimiento > hoy) return -1;
+
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const dm = hoy.getMonth() - nacimiento.getMonth();
+    const dd = hoy.getDate() - nacimiento.getDate();
+    if (dm < 0 || (dm === 0 && dd < 0)) edad--;
+    return edad;
+}
+
+function validarFechaNacimiento(valorFecha) {
+    if (!valorFecha) return true;
+    const edad = calcularEdadDesdeFecha(valorFecha);
+    if (edad === null) return "Escribe una fecha de nacimiento válida.";
+    if (edad < 0) return "No puedes ingresar una fecha futura.";
+    if (edad < 10) return "eres menor";
+    return true;
 }
 
 // ---------------------------------------------------------------
@@ -58,16 +85,13 @@ function urlValida(v, host) {
 
 const VALIDADORES = {
     correo: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || "Escribe un correo válido: usuario@dominio.ext.",
-    telefono: v => {
-        const d = v.replace(/\D/g, "");
-        return (/^\+?[\d\s().-]+$/.test(v) && d.length >= 10 && d.length <= 13) ||
-            "Escribe un teléfono válido (10 a 13 dígitos, sin letras).";
-    },
+    telefono: v => /^\d{10,13}$/.test(v) || "Solo se aceptan números (10 a 13 dígitos), sin letras ni símbolos.",
+    fechaNacimiento: v => validarFechaNacimiento(v),
     urlFacebook: v => urlValida(v, "facebook.com"),
     urlLinkedin: v => urlValida(v, "linkedin.com"),
     usuario: v => (v.length >= 4 && !/\s/.test(v)) || "Utiliza al menos 4 caracteres, sin espacios.",
-    contrasena: v => /^(?=.*[A-Z])(?=.*[^A-Za-z0-9\s])\S{15,}$/.test(v) ||
-        "Mínimo 15 caracteres, una mayúscula y un símbolo especial, sin espacios.",
+    contrasena: v => /^(?=.*[A-Z])(?=.*[^A-Za-z0-9\s])\S{8,}$/.test(v) ||
+        "Mínimo 8 caracteres, una mayúscula y un símbolo especial, sin espacios.",
     confirmarContrasena: v => v === document.getElementById("contrasena").value || "Las contraseñas no coinciden.",
     rfc: v => /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i.test(v) || "Escribe un RFC válido (ej. ABCD010203XYZ).",
     cpFiscal: v => /^\d{5}$/.test(v) || "El código postal fiscal debe tener 5 dígitos.",
@@ -108,7 +132,6 @@ function validarPasoActual(i) {
         }
     });
 
-    // Horario: la hora final debe ser posterior a la inicial
     const desde = paso.querySelector("#horarioContactoDesde");
     const hasta = paso.querySelector("#horarioContactoHasta");
     if (desde && hasta && desde.value && hasta.value && desde.value >= hasta.value) {
@@ -116,7 +139,6 @@ function validarPasoActual(i) {
         mostrarError(hasta, "La hora final debe ser posterior a la inicial.");
     }
 
-    // Constancia fiscal: solo PDF
     const pdf = paso.querySelector("#fiscalSituacion");
     if (pdf && !pdf.disabled && pdf.files[0] && !/\.pdf$/i.test(pdf.files[0].name)) {
         ok = false;
@@ -164,37 +186,65 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 2. Edad
+    // Teléfono: solo números y mensaje de aviso visible debajo
+    const telefonoInput = document.getElementById("telefono");
+    const ayudaTelefono = document.getElementById("ayudaTelefono");
+    if (telefonoInput) {
+        telefonoInput.addEventListener("input", function () {
+            const soloDigitos = this.value.replace(/\D/g, "").slice(0, 13);
+            if (this.value !== soloDigitos) {
+                this.value = soloDigitos;
+            }
+            if (ayudaTelefono) {
+                ayudaTelefono.textContent = "Solo se aceptan números (10 a 13 dígitos).";
+            }
+            evaluarCampo(this);
+        });
+    }
+
+    // 2. Edad: rojo si es fecha futura o <10 años; amarillo 10-17; verde >=18
     const fechaNacimiento = document.getElementById("fechaNacimiento");
     const resultadoEdad = document.getElementById("resultadoEdad");
+    if (fechaNacimiento) {
+        const hoyISO = new Date().toISOString().split("T")[0];
+        fechaNacimiento.setAttribute("max", hoyISO);
+    }
+
+    function actualizarEstadoEdad() {
+        if (!fechaNacimiento || !resultadoEdad) return;
+        resultadoEdad.classList.remove("edad-estado--mayor", "edad-estado--menor", "edad-estado--error");
+        limpiarError(fechaNacimiento);
+
+        if (!fechaNacimiento.value) {
+            resultadoEdad.textContent = "Selecciona una fecha para calcular tu edad.";
+            return;
+        }
+
+        const partes = fechaNacimiento.value.split("-");
+        if (partes.length !== 3 || partes[0].length !== 4) return;
+
+        const validacion = validarFechaNacimiento(fechaNacimiento.value);
+        const edad = calcularEdadDesdeFecha(fechaNacimiento.value);
+
+        if (validacion !== true) {
+            resultadoEdad.textContent = `No permitido: ${validacion}`;
+            resultadoEdad.classList.add("edad-estado--error");
+            mostrarError(fechaNacimiento, validacion);
+            return;
+        }
+
+        if (edad >= 18) {
+            resultadoEdad.textContent = `Eres mayor de edad. Tienes ${edad} años.`;
+            resultadoEdad.classList.add("edad-estado--mayor");
+        } else {
+            resultadoEdad.textContent = `Eres menor de edad (10 a 17 años). Tienes ${edad} años.`;
+            resultadoEdad.classList.add("edad-estado--menor");
+        }
+    }
+
     if (fechaNacimiento && resultadoEdad) {
-        fechaNacimiento.addEventListener("change", function () {
-            resultadoEdad.classList.remove("edad-estado--mayor", "edad-estado--menor", "edad-estado--error");
-            if (fechaNacimiento.value === "") {
-                resultadoEdad.textContent = "Selecciona una fecha para calcular tu edad.";
-                return;
-            }
-            const [anio, mes, dia] = fechaNacimiento.value.split("-").map(Number);
-            const nacimiento = new Date(anio, mes - 1, dia);
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-            if (nacimiento > hoy) {
-                resultadoEdad.textContent = "Error: no se puede calcular la edad con la fecha elegida (es futura).";
-                resultadoEdad.classList.add("edad-estado--error");
-                return;
-            }
-            let edad = hoy.getFullYear() - nacimiento.getFullYear();
-            const dm = hoy.getMonth() - nacimiento.getMonth();
-            const dd = hoy.getDate() - nacimiento.getDate();
-            if (dm < 0 || (dm === 0 && dd < 0)) edad--;
-            if (edad >= 18) {
-                resultadoEdad.textContent = `Eres mayor de edad. Tienes ${edad} años.`;
-                resultadoEdad.classList.add("edad-estado--mayor");
-            } else {
-                resultadoEdad.textContent = `Eres menor de edad. Tienes ${edad} años.`;
-                resultadoEdad.classList.add("edad-estado--menor");
-            }
-        });
+        fechaNacimiento.addEventListener("change", actualizarEstadoEdad);
+        fechaNacimiento.addEventListener("input", actualizarEstadoEdad);
     }
 
     // 3. Mostrar / ocultar contraseña
@@ -273,10 +323,14 @@ document.addEventListener("DOMContentLoaded", function () {
         syncSocial(chk);
     });
 
-    // 6. Facturación opcional
+    // 6. Facturación opcional + casilla en verde al marcarse
     const chkFact = document.getElementById("quiereFactura");
+    const lineaFactura = document.getElementById("lineaFactura");
     function syncFactura() {
         if (!chkFact) return;
+        if (lineaFactura) {
+            lineaFactura.classList.toggle("factura-activa", chkFact.checked);
+        }
         document.querySelectorAll("[data-fiscal]").forEach(el => {
             el.disabled = !chkFact.checked;
             if (!chkFact.checked) { el.value = ""; limpiarError(el); evaluarCampo(el); }
@@ -382,6 +436,7 @@ document.addEventListener("DOMContentLoaded", function () {
         radiosFiltro.forEach(r => r.addEventListener("change", sync));
         sync();
     }
+
     // 10. Salidas de almacén: el catálogo depende de la categoría
     const radiosCat = document.querySelectorAll('input[name="ressourceCategory"]');
     if (radiosCat.length) {
@@ -409,6 +464,7 @@ document.addEventListener("DOMContentLoaded", function () {
         radiosCat.forEach(r => r.addEventListener("change", llenar));
         llenar();
     }
+
     // 11. Configuración de colores en tiempo real
     const primaryColorInput = document.getElementById("primaryColor");
     const bgColorInput = document.getElementById("backgroundColor");
@@ -427,7 +483,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 12. Control interactivo de volumen, porcentaje y botón de silencio (¡Pégalo aquí abajo!)
+    // 12. Control interactivo de volumen, porcentaje y botón de silencio
     const rangeVolume = document.getElementById("soundsVolume");
     const spanVolumenTexto = document.getElementById("volumenTexto");
     const btnMute = document.getElementById("muteSounds");
@@ -473,7 +529,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-// 13. Vista previa de la foto de perfil en círculo
+
+    // 13. Vista previa de la foto de perfil en círculo
     const userPhotoInput = document.getElementById("userPhoto");
     const avatarPreview = document.getElementById("avatarPreview");
     const avatarPlaceholder = document.getElementById("avatarPlaceholder");
@@ -496,5 +553,4 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-}); 
-
+});

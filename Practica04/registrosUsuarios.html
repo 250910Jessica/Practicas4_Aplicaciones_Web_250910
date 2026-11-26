@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MecaGest: Formulario de Registro de Nuevos Usuarios - 250910</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="data/domicilios.js"></script>
@@ -99,9 +102,11 @@
                         <input type="email" id="correo" placeholder="jessica.gutierrez@example.com" required>
                     </div>
                     <div class="input-group">
-                    <label for="telefono">Número Telefónico: *</label>
-                    <input type="tel" id="telefono" placeholder="(55) 1234-5678" required>
+                        <label for="telefono">Número Telefónico: *</label>
+                        <input type="tel" id="telefono" inputmode="numeric" maxlength="13" placeholder="7761234567" required>
+                        <small class="ayuda aviso-solo-numeros" id="ayudaTelefono">Solo se aceptan números (10 a 13 dígitos).</small>
                     </div>
+                </div>
 
                 <h4>Horario preferido de contacto</h4>
                 <div class="grid-2-col">
@@ -118,7 +123,7 @@
                 <h4>Redes sociales y mensajería</h4>
                 <div class="grid-2-col">
                     <div class="input-group">
-                        <div>
+                        <div class="checkbox-inline">
                             <input type="checkbox" id="socialFb" data-social="urlFacebook" data-ayuda="ayudaFb">
                             <label for="socialFb">Facebook</label>
                         </div>
@@ -126,7 +131,7 @@
                         <small class="ayuda" id="ayudaFb" data-on="Ya puedes introducir la dirección de tu perfil." data-off="Activa la casilla para habilitar este campo."></small>
                     </div>
                     <div class="input-group">
-                        <div>
+                        <div class="checkbox-inline">
                             <input type="checkbox" id="socialLk" data-social="urlLinkedin" data-ayuda="ayudaLk">
                             <label for="socialLk">LinkedIn</label>
                         </div>
@@ -134,7 +139,7 @@
                         <small class="ayuda" id="ayudaLk" data-on="Ya puedes introducir la dirección de tu perfil." data-off="Activa la casilla para habilitar este campo."></small>
                     </div>
                     <div class="input-group span-2">
-                        <div>
+                        <div class="checkbox-inline">
                             <input type="checkbox" id="socialWa" data-social="whatsAppQr" data-ayuda="ayudaWa">
                             <label for="socialWa">WhatsApp: Adjuntar QR</label>
                         </div>
@@ -178,19 +183,19 @@
                     <div class="input-group">
                         <label for="contrasena">Contraseña: *</label>
                         <div class="campo-password">
-                            <input type="password" id="contrasena" placeholder="**********" autocomplete="new-password" required>
+                            <input type="password" id="contrasena" placeholder="********" autocomplete="new-password" required>
                             <button type="button" class="btn-ojo" data-ojo="contrasena" aria-label="Mostrar contraseña"><i class="fas fa-eye"></i></button>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="confirmarContrasena">Confirmar contraseña: *</label>
                         <div class="campo-password">
-                            <input type="password" id="confirmarContrasena" placeholder="***********" autocomplete="new-password" required>
+                            <input type="password" id="confirmarContrasena" placeholder="********" autocomplete="new-password" required>
                             <button type="button" class="btn-ojo" data-ojo="confirmarContrasena" aria-label="Mostrar contraseña"><i class="fas fa-eye"></i></button>
                         </div>
                     </div>
                 </div>
-                <small class="ayuda">Requisitos: mínimo 15 caracteres, al menos una mayúscula y un símbolo especial. Ambas contraseñas deben coincidir.</small>
+                <small class="ayuda">Requisitos: mínimo 8 caracteres, al menos una mayúscula y un símbolo especial. Ambas contraseñas deben coincidir.</small>
                 <div class="btn-group between">
                     <button type="button" class="btn-secondary" onclick="moverPaso(-1)">&laquo; Anterior</button>
                     <div style="display:flex; gap:10px; align-items:center;">
@@ -238,7 +243,7 @@
             <!-- PASO 5 -->
             <fieldset class="wizard-paso" id="paso-4">
                 <legend>Facturación (opcional)</legend>
-                <div class="checkbox-linea">
+                <div class="checkbox-linea" id="lineaFactura">
                     <input type="checkbox" id="quiereFactura">
                     <label for="quiereFactura">Deseo proporcionar datos de facturación</label>
                 </div>

@@ -22,27 +22,26 @@
     padding: 0;
 }
 
-/* Eliminar márgenes y rellenos por defecto del navegador */
+/* Fuente general del sistema y eliminación de márgenes por defecto */
 body {
     margin: 0;
     padding: 0;
     background-color: var(--fondo);
     color: var(--texto);
-    font-family: inherit;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* =========================================
    MENÚ DE NAVEGACIÓN INTEGRADO AL ENCABEZADO
 ========================================= */
-/* Menú de navegación integrado sin separación superior */
 .menu-nav {
-    background-color: var(--azul-oscuro); /* Mismo color oscuro (#011627) */
+    background-color: var(--azul-oscuro);
     padding: 14px 20px;
     text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Línea divisoria muy sutil arriba */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 0 !important;
-    margin-bottom: 25px; /* Espacio antes de que empiece el formulario principal (<main>) */
+    margin-bottom: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -71,9 +70,10 @@ body {
 
 .menu-nav a:hover,
 .menu-nav a.activo {
-    color: var(--azul-principal); /* Turquesa (#2EC4B6) */
+    color: var(--azul-principal);
     font-weight: 600;
 }
+
 /* =========================================
    ESTILOS DE LA BARRA WIZARD (HORIZONTAL)
 ========================================= */
@@ -109,15 +109,11 @@ body {
     transition: all 0.3s ease;
 }
 
-.wizard-paso-item.activo {
-    background-color: var(--azul-boton);
-    color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
-}
-
+.wizard-paso-item.activo,
 .wizard-paso-item.completado {
     background-color: var(--verde);
     color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(22, 128, 61, 0.18);
 }
 
 /* =========================================
@@ -137,26 +133,26 @@ body {
 header {
     background-color: var(--azul-oscuro);
     color: #ffffff;
-    padding: 40px 20px; /* Un poco más de espacio vertical */
+    padding: 40px 20px;
     text-align: center;
     margin-bottom: 0 !important;
 }
 
 header h1 {
-    font-size: 3rem; /* Título principal mucho más grande y llamativo */
+    font-size: 3rem;
     font-weight: 700;
     margin-bottom: 10px;
 }
 
 header h2 {
-    font-size: 1.6rem; /* Subtítulo más grande */
+    font-size: 1.6rem;
     font-weight: 500;
     margin-bottom: 8px;
     opacity: 0.95;
 }
 
 header p {
-    font-size: 1.1rem; /* Texto descriptivo más legible y amplio */
+    font-size: 1.1rem;
     opacity: 0.85;
 }
 
@@ -173,16 +169,13 @@ fieldset {
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 22px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-
-    /* PEGA LAS SOMBRAS AQUÍ ADENTRO: */
     box-shadow: 0 10px 25px -5px rgba(1, 22, 39, 0.12), 0 8px 10px -6px rgba(1, 22, 39, 0.08);
     transition: box-shadow 0.3s ease;
 }
 
 legend {
     color: var(--azul-oscuro);
-    background-color: var(--azul-claro);
+    background-color: var(--azul-claro, #EAF6FF);
     padding: 7px 14px;
     border-radius: 8px;
     font-weight: bold;
@@ -196,6 +189,46 @@ label {
     font-weight: 600;
     margin-bottom: 6px;
     margin-top: 10px;
+}
+
+.ayuda {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 0.82rem;
+    margin-top: 6px;
+}
+
+.aviso-solo-numeros {
+    color: var(--verde);
+    font-weight: 500;
+}
+
+/* =========================================
+   CASILLAS AL LADO DEL TEXTO
+========================================= */
+.checkbox-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.checkbox-inline input[type="checkbox"],
+.checkbox-linea input[type="checkbox"] {
+    width: auto;
+    height: auto;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--verde);
+    cursor: pointer;
+}
+
+.checkbox-inline label,
+.checkbox-linea label {
+    display: inline;
+    margin: 0;
+    cursor: pointer;
 }
 
 /* =========================================
@@ -265,6 +298,7 @@ textarea.campo-error {
     margin-bottom: 8px;
     display: block;
 }
+
 /* =========================================
    TABLAS Y EDAD
 ========================================= */
@@ -351,6 +385,17 @@ th {
     margin: 10px 0;
 }
 
+.checkbox-linea.factura-activa input[type="checkbox"] {
+    accent-color: var(--verde);
+    outline: 2px solid var(--verde);
+    outline-offset: 1px;
+}
+
+.checkbox-linea.factura-activa label {
+    color: var(--verde);
+    font-weight: 700;
+}
+
 .alerta, .mensaje-simulacion {
     background-color: #FFF0F0;
     color: var(--rojo);
@@ -366,6 +411,7 @@ th {
     color: var(--verde);
     border-color: #A7E2B8;
 }
+
 /* =========================================
    CAMPO DE CONTRASEÑA CON BOTÓN DE VISIBILIDAD
 ========================================= */
@@ -378,13 +424,13 @@ th {
 
 .campo-password input {
     width: 100%;
-    padding-right: 40px !important; /* Deja espacio a la derecha para que el texto no tape el ícono */
+    padding-right: 40px !important;
 }
 
 .campo-password .btn-ojo {
     position: absolute;
     right: 5px;
-    bottom: 8px; /* Lo alinea perfectamente sobre la línea inferior */
+    bottom: 8px;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -403,6 +449,7 @@ th {
     color: var(--azul-boton, #3E8FD6);
     transform: none !important;
 }
+
 /* =========================================
    BOTONES
 ========================================= */
@@ -424,6 +471,7 @@ button, input[type="submit"], input[type="reset"] {
     color: var(--blanco);
     font-size: 0.95rem;
     font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
 }
