@@ -66,7 +66,7 @@ function validarFechaNacimiento(valorFecha) {
     const edad = calcularEdadDesdeFecha(valorFecha);
     if (edad === null) return "Escribe una fecha de nacimiento válida.";
     if (edad < 0) return "No puedes ingresar una fecha futura.";
-    if (edad < 10) return `Tienes ${edad} años. La edad mínima permitida es de 10 años.`;
+    if (edad < 10) return `Eres menor de edad.`;
     return true;
 }
 
