@@ -1,0 +1,468 @@
+:root {
+    --azul-oscuro: #011627;
+    --azul-principal: #2EC4B6;
+    --azul-boton: #E71D36;
+    --color-advertencia: #FF9F1C;
+
+    --fondo: #F4F8FC;
+    --blanco: #FFFFFF;
+    --borde: #DCE8F2;
+    --texto: #222222;
+    --texto-secundario: #344054;
+
+    --verde: #16803D;
+    --amarillo: #B7791F;
+    --rojo: #ff0000;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* =========================================
+   ENCABEZADO Y MENÚ DE NAVEGACIÓN
+========================================= */
+header {
+    background-color: var(--azul-oscuro);
+    color: #ffffff;
+    padding: 40px 20px;
+    text-align: center;
+    margin-bottom: 0 !important;
+}
+
+header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+header h2 {
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    opacity: 0.95;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.85;
+}
+
+.menu-nav {
+    background-color: var(--azul-oscuro);
+    padding: 14px 20px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 0 !important;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+.menu-nav a {
+    color: #CBD5E1;
+    text-decoration: none;
+    padding: 0 18px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.menu-nav a:not(:last-child):after {
+    content: "|";
+    margin-left: 18px;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 300;
+}
+
+.menu-nav a:hover,
+.menu-nav a.activo {
+    color: var(--azul-principal);
+    font-weight: 600;
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL Y TARJETAS
+========================================= */
+main {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px 40px 40px;
+}
+
+fieldset {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 25px -5px rgba(1, 22, 39, 0.12), 0 8px 10px -6px rgba(1, 22, 39, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+legend {
+    color: var(--azul-oscuro);
+    background-color: #EAF6FF;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+h4 {
+    color: var(--azul-oscuro);
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+label {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    margin-top: 10px;
+}
+
+.ayuda {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 0.82rem;
+    margin-top: 6px;
+}
+
+.aviso-solo-numeros {
+    color: var(--verde);
+    font-weight: 500;
+}
+
+.etiqueta-tipo {
+    display: inline-block;
+    background: #EAF6FF;
+    color: var(--azul-oscuro);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 6px;
+}
+
+.grid-2-col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 24px;
+}
+
+.grid-2-col .span-2 {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 680px) {
+    .grid-2-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================
+   BARRA WIZARD Y VISIBILIDAD DE PASOS
+========================================= */
+.wizard-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background-color: #ffffff;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wizard-bar .line {
+    flex: 1;
+    height: 2px;
+    background: var(--borde);
+    margin: 0 12px;
+}
+
+.wizard-paso-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    color: var(--texto-secundario);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.wizard-paso-item.activo,
+.wizard-paso-item.completado {
+    background-color: var(--verde);
+    color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(22, 128, 61, 0.18);
+}
+
+.wizard-paso {
+    display: none !important;
+}
+
+.wizard-paso.paso-activo {
+    display: block !important;
+}
+
+/* =========================================
+   CASILLAS, INPUTS Y VALIDACIÓN
+========================================= */
+.checkbox-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.checkbox-linea {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.checkbox-inline input[type="checkbox"],
+.checkbox-linea input[type="checkbox"] {
+    width: auto;
+    height: auto;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--verde);
+    cursor: pointer;
+}
+
+.checkbox-inline label,
+.checkbox-linea label {
+    display: inline;
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkbox-linea.factura-activa input[type="checkbox"] {
+    accent-color: var(--verde);
+    outline: 2px solid var(--verde);
+    outline-offset: 1px;
+}
+
+.checkbox-linea.factura-activa label {
+    color: var(--verde);
+    font-weight: 700;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="reset"]):not([type="color"]):not([type="range"]):not([type="image"]),
+select,
+textarea {
+    width: 100%;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--borde);
+    border-radius: 0;
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-bottom-color: var(--azul-boton);
+    box-shadow: none;
+}
+
+input.campo-lleno,
+select.campo-lleno,
+textarea.campo-lleno {
+    border-bottom-color: var(--verde);
+}
+
+input[type="color"] {
+    width: 80px;
+    height: 40px;
+    padding: 2px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background: var(--blanco);
+    cursor: pointer;
+}
+
+input[type="range"] {
+    accent-color: var(--azul-principal);
+}
+
+input.campo-error,
+select.campo-error,
+textarea.campo-error {
+    border: none !important;
+    border-bottom: 2px solid var(--rojo) !important;
+    border-radius: 0 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.mensaje-error-campo {
+    color: var(--rojo) !important;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* =========================================
+   EDAD, TABLAS, ESTATUS Y ALERTAS
+========================================= */
+#resultadoEdad {
+    padding: 10px 12px;
+    margin-top: 14px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background-color: var(--fondo);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.edad-estado--mayor { color: var(--verde); background-color: #E8F7ED !important; border-color: #A7E2B8 !important; }
+.edad-estado--menor { color: var(--amarillo); background-color: #FFF8E6 !important; border-color: #F3D58A !important; }
+.edad-estado--error { color: var(--rojo); background-color: #FFF0F0 !important; border-color: #f80505 !important; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background-color: var(--blanco);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid var(--borde);
+    font-size: 0.9rem;
+}
+
+th {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.estatus {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.estatus--programada { background: #E0F2FE; color: #0369A1; }
+.estatus--atendida { background: #E8F7ED; color: var(--verde); }
+.estatus--cancelada { background: #FFF0F0; color: var(--rojo); }
+.estatus--reprogramada { background: #FFF8E6; color: var(--amarillo); }
+
+.oculta {
+    display: none !important;
+}
+
+.alerta, .mensaje-simulacion {
+    background-color: #FFF0F0;
+    color: var(--rojo);
+    border: 1px solid #f8d7da;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.mensaje-simulacion {
+    background-color: #E8F7ED;
+    color: var(--verde);
+    border-color: #A7E2B8;
+}
+
+/* =========================================
+   BOTONES
+========================================= */
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.btn-group.between {
+    justify-content: space-between;
+}
+
+.btn-group.right {
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+button, input[type="submit"], input[type="reset"] {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--azul-boton);
+    color: var(--blanco);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+button:hover, input[type="submit"]:hover:not(:disabled) {
+    background-color: var(--azul-oscuro);
+    transform: translateY(-1px);
+}
+
+button:disabled, input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.btn-secondary, input[type="reset"] {
+    background-color: #EAF1F7;
+    color: var(--azul-oscuro);
+}
+
+.btn-secondary:hover {
+    background-color: var(--borde);
+}
+
+.btn-secondary.activo-mute {
+    background-color: var(--azul-oscuro);
+    color: #ffffff;
+}
